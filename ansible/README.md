@@ -16,6 +16,7 @@ Table of contents
    * [Kubernetes python client](#kubernetes-python-client)
    * [Multistage environment variables](#multistage-environment-variables)
    * [Vaults](#vaults)
+   * [Python and Pip installation](#python-and-pip-installation)
 <!--te-->
 
 Installing Ansible
@@ -309,3 +310,59 @@ roles/ccoms
 
 11 directories
 ```
+
+Python and Pip installation
+==========================
+Ansible work with Python, so whenever we install ansible we can see python get installed with it.</br>
+Pip is used to install python modules</br>
+
+* Process of installing ansible
+There are various way can ansible like yum, rpm
+
+* Process of installing python and pip 
+  ``` yum search python | grep  "python-setuptools ```
+  If you are not able to find python package add yum repository for python. </br>
+
+  ```  yum search python | grep  "pip" ```
+  pip install --upgrade pip </br>
+
+* Configure newly installed python on system using update-alternatives
+
+  * Check where existing python binary is pointing and its priority 
+    update-alternatives --config python/pip
+    ```
+    [root@mum00cuc ~]# update-alternatives --config python
+    
+    There are 2 programs which provide 'python'.
+    
+      Selection    Command
+    -----------------------------------------------
+    *+ 1           /usr/bin/python3.6
+       2           /usr/bin/python3.4
+    ```
+	
+	* Removing and installing python or pip pointing
+     Command is as below :: </br>
+     ``` 
+     update-alternatives --remove python /usr/bin/python2.7 
+     update-alternatives --install /usr/bin/python python /usr/bin/python3.4 1 
+     update-alternatives --remove pip /usr/bin/pip2.7 
+     pdate-alternatives --install /usr/bin/pip pip /usr/bin/pip3.4 1 
+     ```
+      
+      Note:: 1 is priority </br>
+       
+  * Issue while installing pip modules [Read only file system]
+    Command is as below   
+    ```
+    self._fileop.write_binary_file(outname, script_bytes)
+    File "/usr/lib/python3.6/site-packages/pip/_vendor/distlib/util.py", line 407, in write_binary_file
+    with open(path, 'wb') as f:
+    OSError: [Errno 30] Read-only file system: '/usr/local/bin/pip'
+    You are using pip version 9.0.1, however version 19.3.1 is available. 
+    You should consider upgrading via the 'pip install --upgrade pip' command
+    ```
+     
+     Solution for this is and Upgrade pip:: </br>
+     chown -R $USER /usr/local/bin </br>
+     pip install --upgrade pip </br>
