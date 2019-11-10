@@ -17,7 +17,7 @@ Table of contents
    * [Multistage environment variables](#multistage-environment-variables)
    * [Vaults](#vaults)
    * [Python and Pip installation](#python-and-pip-installation)
-   * [Understanding Relative directories using builtin ansible variables] (#understanding-relative-directories-using-builtin-ansible-variables)
+   * [Understanding Relative directories using builtin ansible variables](#understanding-relative-directories-using-builtin-ansible-variables)
 <!--te-->
 
 Installing Ansible
