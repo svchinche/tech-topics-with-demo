@@ -18,6 +18,7 @@ Table of contents
    * [Vaults](#vaults)
    * [Python and Pip installation](#python-and-pip-installation)
    * [Understanding Relative directories using builtin ansible variables](#understanding-relative-directories-using-builtin-ansible-variables)
+   * [Best Practices for using roles](#best-practices-for-roles)
 <!--te-->
 
 Installing Ansible
@@ -392,3 +393,10 @@ Where dot means project home directory
 [root@mum00cuc ansible_based_k8s-ccoms-saas-deployment]# find . -iname  playbook_dir
 ./playbook_dir
 ```
+
+Best practices for roles
+======================== 
+
+Roles are not classes or object or libraries – those are programming constructs </br>
+Keep roles loosely-coupled — limit hard dependencies on other roles or external variables.</br>
+Keep provisioning separate from configuration and app deployment </br>
