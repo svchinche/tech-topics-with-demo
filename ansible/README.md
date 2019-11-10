@@ -17,10 +17,11 @@ Table of contents
    * [Multistage environment variables](#multistage-environment-variables)
    * [Vaults](#vaults)
    * [Python and Pip installation](#python-and-pip-installation)
+   * [Understanding Relative directories using builtin ansible variables] (#understanding-relative-directories-using-builtin-ansible-variables)
 <!--te-->
 
 Installing Ansible
-==================================
+===================
 
 - Install ansible using yum
 ```
@@ -30,7 +31,7 @@ yum install ansible
 ```
 
 Inventory
-=================================================================================================
+=========
 Default iventory location is /etc/ansible/hosts, we can specify our own inventory using -i option
 ```
 [root@mum00aqm ~]# cat /etc/ansible/hosts | tail -n 2
@@ -366,3 +367,28 @@ There are various way can ansible like yum, rpm
      Solution for this is and Upgrade pip:: </br>
      chown -R $USER /usr/local/bin </br>
      pip install --upgrade pip </br>
+
+Understanding Relative directories using builtin ansible variables
+==================================================================
+- role_path : Will create a directory from where role is executed.
+- inventory_dir : Will create a directory in inventory directory
+- playbook_dir : Will create a directory from where playbook is executed.
+
+```
+- name: "Checking directory creation path"
+  file:
+    path: "{{ playbook_dir }}/playbook_dir"
+    state: directory
+  tags:
+  - check
+```
+
+Where dot means project home directory
+```
+[root@mum00cuc ansible_based_k8s-ccoms-saas-deployment]# find . -iname role_path
+./roles/common/role_path
+[root@mum00cuc ansible_based_k8s-ccoms-saas-deployment]# find . -iname  inventory_dir
+./environments/dev/inventory_dir
+[root@mum00cuc ansible_based_k8s-ccoms-saas-deployment]# find . -iname  playbook_dir
+./playbook_dir
+```
