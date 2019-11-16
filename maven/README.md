@@ -37,3 +37,5 @@ mvn -Drevision=1.2 clean:clean install
 ```
 * Execute goals on particular modules 
 ```
+ mvn -Drevision=1.0.0 -pl eureka-server,countries-service,capitals-service clean:clean resources:resources compiler:compile  resources:testResources compiler:testCompile surefire:test
+```
