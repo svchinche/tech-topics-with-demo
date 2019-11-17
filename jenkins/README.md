@@ -8,6 +8,7 @@ Table of contents
 <!--ts-->
    * [what is Devops](#what-is-devops)
    * [How to start working in devops](#how-to-start-working-in-devops)
+   * [Working with Docker Private Registry](#working-with-docker-private-registry)
    * [Roles and Responsibilities of Devops Engg](#roles-and-responsibilities-of-devops-engg)
    * [Roles and Responsibilities of Cloud Engg](#roles-and-responsibilities-of-cloud-engg)
    * [Best Practices for Devops](#best-practices-for-devops)
@@ -34,6 +35,36 @@ Devops is a collection architecture, tools that increases organization ability t
     * Disadvantages of microservices 
         - Microservice make terribe to analyze the issue 
 
+Working with Docker Private Registry
+=======================
+
+* Create a certificate
+
+``` openssl req -newkey rsa:4096 -nodes -sha256 -keyout /etc/certs/ca.key -x509 -days 365 -out /etc/certs/ca.crt ```
+
+* Create docker registry container 
+
+``` docker run -d -p 5000:5000 --restart=always --name registry -v /etc/certs:/etc/certs  -v /root/docker_registry/images:/var/lib/registry -e REGISTRY_HTTP_TLS_CERTIFICATE=/etc/certs/ca.crt -e REGISTRY_HTTP_TLS_KEY=/etc/certs/ca.key registry ```
+
+* Docker logs registry ---> check if any errors
+  remove registry container if there are any issue while starting
+``` docker stop $(docker ps -aqf "ancestor=registry"); docker rm $(docker ps -aqf "ancestor=registry") ```
+
+* Tag all images which you want to push to docker registry 
+```docker tag eureka-server:0.1 k8s-master:5000/eureka-server:0.1 ```
+``` docker tag eureka-cnts-svc:0.1 k8s-master:5000/eureka-cnts-svc:0.1 ```
+``` docker tag eureka-capitals-svc:0.1  k8s-master:5000/eureka-capitals-svc:0.1 ```
+
+* Push docker images 
+```
+docker push k8s-master:5000/eureka-server:0.1
+docker push k8s-master:5000/eureka-cnts-svc:0.1
+docker push k8s-master:5000/eureka-capitals-svc:0.1
+```
+
+* Client node: 
+Copy certificate and run this command on client node
+``` scp -pr root@k8s-master:/etc/certs/ca.crt /etc/docker/certs.d/k8s-master:5000/ ```
 
 How to start working in devops
 ==============================
