@@ -1,4 +1,4 @@
-Kubernetes 
+Docker and Kubernetes 
 ==========
 
 
@@ -17,7 +17,7 @@ Table of contents
 Resources
 =========
 
-```
+```linux
 [root@mum00aqm ~]# kubectl api-resources list  -o wide
 NAME                              SHORTNAMES    KIND                             VERBS
 bindings                                        Binding                          create
@@ -83,7 +83,7 @@ CoreDNS
 ``` kubectl get -n kube-system cm/coredns --export -o yaml > coredns-kube-system.yml  ```
 
 * Add below content on above this line:: kubernetes cluster.local in-addr.arpa ip6.arpa { </br>
-```
+```shell
         rewrite name cfg.ccoms.com cfg.ccoms.svc.cluster.local
         rewrite name dept.ccoms.com dept.ccoms.svc.cluster.local
         rewrite name org.ccoms.com org.ccoms.svc.cluster.local
@@ -98,18 +98,19 @@ The kubectl delete pod command isn't destructive and doesn't cause down time. Th
  
 * Replace existing coredns configmap through newly created manifest file
 
-``` kubectl replace -n kube-system -f coredns-kube-system.yml ```
+``` 
+kubectl replace -n kube-system -f coredns-kube-system.yml 
+```
 
 Note:: Here, we are using replace since we dont know how this ConfigMap is created. if you try to use apply it wont work.
 
 - Adding Custom core-dns file
 
-
 Issues
 ======
 
 * Bigger context error when using integer variable in environment section
-```
+```linux
 [root@mum00aqm k8s-ccoms-saas-deployment]# kubectl apply -f ccoms-empms.yaml
 Error from server (BadRequest): error when creating "ccoms-empms.yaml": Deployment in version "v1" cannot be handled as a Deployment: v1.Deployment.Spec: 
 v1.DeploymentSpec.Template: v1.PodTemplateSpec.Spec: v1.PodSpec.Containers: []v1.Container: v1.Container.Env: []v1.EnvVar: v1.EnvVar.Value: ReadString: expects " or n, 
@@ -117,5 +118,6 @@ but found 8, error found in #10 byte of ...|,"value":8080}],"ima|..., bigger con
 "imagePullPo|...
 ```
 
-Solution :: If you are using any integer variable in environment section, keep that value in double quote </br>
+*Solution::* 
+If you are using any integer variable in environment section, keep that value in double quote </br>
 use value: "8080" instead value: 8080
