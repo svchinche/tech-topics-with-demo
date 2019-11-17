@@ -1,3 +1,5 @@
-# Demo based Tutorials with standards followed by Software Industries
+# Tech Topics with Best Practices
 
-This link will help to understand to all technologies
+## I am covering all technologies tutorials with standards followed by Software Industries for Devops !!
+
+
