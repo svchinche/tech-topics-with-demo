@@ -9,6 +9,8 @@ Table of contents
    * [xargs](#xargs)
    * [sort](#sort)
    * [tr](#tr)
+   * [sed](#sed)
+   * [awk](#awk)
    * [tricky interview quetions](#tricky-interview-quetions)
 
 <!--te-->
@@ -150,6 +152,109 @@ sort
 12,Sanchit,22000,1150
 7,Sachin,27000,1300
 ```
+sed
+===
+
+Substitute/replace ccoms with bcoms
+-----------------------------------
+```
+[root@mum00aqm ~]# sed 's/ccoms/bcoms/g' ext_ccoms.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bcoms
+  namespace: bcoms
+spec:
+  ports:
+  - port: 8111
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+  externalIPs:
+  - 10.180.86.187
+ ```
+ Delete the line which matches the pattern
+ -----------------------------------------
+```shell
+[root@mum00aqm ~]# sed '/ccoms/d' ext_ccoms.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+spec:
+  ports:
+  - port: 8111
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+  externalIPs:
+  - 10.180.86.187
+```
+Special characters well with sed
+--------------------------------
+```shell
+[root@mum00aqm ~]# sed 's/- port: 8111/- port: 8888/g' ext_ccoms.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccoms
+  namespace: ccoms
+spec:
+  ports:
+  - port: 8888
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+  externalIPs:
+  - 10.180.86.187
+```
+Special character with single quote
+```shell
+[root@mum00aqm ~]# cat ext_ccoms.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 'ccoms'
+  namespace: ccoms
+spec:
+  ports:
+  - port: 8111
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+  externalIPs:
+  - 10.180.86.187
+
+
+[root@mum00aqm ~]# sed 's/name: '\''ccoms'\''/name: '\''bcoms'\''/g' ext_ccoms.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 'bcoms'
+  namespace: ccoms
+spec:
+  ports:
+  - port: 8111
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+  externalIPs:
+  - 10.180.86.187
+```
+
+awk
+===
+
+
 
 Tricky interview quetions
 =========================
