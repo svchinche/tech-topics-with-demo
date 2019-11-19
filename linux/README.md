@@ -5,11 +5,14 @@ Table of contents
 
 <!--ts-->
    * [Double vs Sigle square bracket for if condition](#double-vs-single-square-bracket-for-if-condition)
+   * [cut](#cut)
    * [xargs](#xargs)
    * [sort](#sort)
    * [tr](#tr)
+   * [tricky interview quetions](#tricky-interview-quetions)
 
 <!--te-->
+
 
 
 Double vs Single square bracket for if condition
@@ -37,6 +40,18 @@ if [[ $name = "suyog" ]]; then echo "match"; fi
 -bash: test: 4: unary operator expected
 ```
 
+cut
+===
+used for removing or replacing sections
+```
+[root@mum00aqm ~]# echo -e "Hi \n this is suyog, \n and my mob no is 9822622279" | cut -d' ' -f1
+Hi
+
+[root@mum00aqm ~]# echo -e "Hi \n this is suyog, \n and my mob no is 9822622279" | cut -d' ' -f1-4 --output-delimiter='%'
+Hi%
+%this%is%suyog,
+%and%my%mob
+```
 xargs
 =====
 
@@ -134,4 +149,51 @@ sort
 4,Suraj,21000,1100
 12,Sanchit,22000,1150
 7,Sachin,27000,1300
+```
+
+Tricky interview quetions
+=========================
+
+How to find total no of files and directories from current directory ?
+-----------------------------------------------------
+```shell
+[root@k8s-workernode shell_learning]# find . -type d | expr $(wc -l) - 1
+3
+[root@k8s-workernode shell_learning]# find . -type f | expr $(wc -l) - 1
+6
+```
+
+Count the occurences of special character in file ?
+---------------------------------------------------
+```
+[root@mum00aqm ~]# cat test.date
+*%$#%%$#%$#$@#$@#
+[root@mum00aqm ~]# grep  -o "#" test.date | wc -l
+5
+```
+
+Move all files with .txt with .txt1 in same directory, if already moved then it should not move
+-----------------------------------------------------------------------------------------------
+
+for eg. in below ex xyz txt file already move, command should ignore that
+```
+[root@mum00aqm test]# ll
+total 0
+-rw-r--r-- 1 root root 0 Nov 19 17:46 abc.txt
+-rw-r--r-- 1 root root 0 Nov 19 17:46 cde.txt
+-rw-r--r-- 1 root root 0 Nov 19 17:46 fgh.txt
+-rw-r--r-- 1 root root 0 Nov 19 17:46 ghj.txt
+-rw-r--r-- 1 root root 0 Nov 19 17:48 xyz.txt1
+```
+
+**Solution::**
+```
+[root@mum00aqm test]# for filename in $( ls *.txt |sed 's/.txt1$//g');do  mv $filename ${filename}1 ; done
+[root@mum00aqm test]# ll
+total 0
+-rw-r--r-- 1 root root 0 Nov 19 17:46 abc.txt1
+-rw-r--r-- 1 root root 0 Nov 19 17:46 cde.txt1
+-rw-r--r-- 1 root root 0 Nov 19 17:46 fgh.txt1
+-rw-r--r-- 1 root root 0 Nov 19 17:46 ghj.txt1
+-rw-r--r-- 1 root root 0 Nov 19 17:48 xyz.txt1
 ```
