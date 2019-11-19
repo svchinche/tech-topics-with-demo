@@ -1,3 +1,37 @@
+xargs
+=====
+
+**Note::** xargs command in unix will not work as expected, if any of file name contains space or new line in it.</br>
+to avoid this problem we use find -print0 to produce null separated file name and xargs-0 to handle null separated items
+
+```linux
+find /tmp -name "*.tmp" -print0 | xargs -0 rm
+```
+
+
+
+
+How to avoid "Argument list too long" error
+------------------------------------------
+xargs in unix or Linux was initially use to avoid "Argument list too long" errors and by using xargs you send sub-list to any command which is shorter than "ARG_MAX" and that's how xargs avoid "Argument list too long" error. You can see current value of "ARG_MAX" by using getconf ARG_MAX. Normally xargs own limit is much smaller than what modern system can allow, default is 4096. You can override xargs sub list limit by using "-s" command line option.
+
+find –exec vs find + xargs
+--------------------------
+xargs with find command is much faster than using -exec on find. since -exec runs for each file while xargs operates on sub-list level. to give an example if you need to change permission of 10000 files xargs with find will be almost 10K time faster than find with -exec because xargs change permission of all file at once.
+
+
+```linux
+getconf -a . | grep ARG
+ARG_MAX                            2097152
+NL_ARGMAX                          4096
+_POSIX_ARG_MAX                     2097152
+LFS64_CFLAGS                       -D_LARGEFILE64_SOURCE
+LFS64_LINTFLAGS                    -D_LARGEFILE64_SOURCE
+XBS5_ILP32_OFFBIG_CFLAGS           -m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+POSIX_V6_ILP32_OFFBIG_CFLAGS       -m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+POSIX_V7_ILP32_OFFBIG_CFLAGS       -m32 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+```
+
 tr
 ==
 We use this command to translate and delete characters </br>
