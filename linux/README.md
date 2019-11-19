@@ -193,7 +193,7 @@ spec:
   externalIPs:
   - 10.180.86.187
 ```
-Special characters well with sed
+Special characters with sed works very well
 --------------------------------
 ```shell
 [root@mum00aqm ~]# sed 's/- port: 8111/- port: 8888/g' ext_ccoms.yaml
@@ -214,6 +214,7 @@ spec:
   - 10.180.86.187
 ```
 Special character with single quote
+-----------------------------------
 ```shell
 [root@mum00aqm ~]# cat ext_ccoms.yaml
 ---
@@ -258,6 +259,18 @@ awk
 
 Tricky interview quetions
 =========================
+
+Command to search content in file, if matches it should show next 3 lines
+--------------------------------------------------------------------------
+```shell
+[root@mum00aqm ~]# grep -A 3 '8111' ext_ccoms.yaml
+  - port: 8111
+    targetPort: 8111
+    protocol: TCP
+  selector:
+    app: proxy-ms
+```
+*-A* : means after search context
 
 How to find total no of files and directories from current directory ?
 -----------------------------------------------------
