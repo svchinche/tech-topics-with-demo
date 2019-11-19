@@ -1,3 +1,42 @@
+# Linux
+
+Table of contents
+=================
+
+<!--ts-->
+   * [Double vs Sigle square bracket for if condition](#double-vs-single-square-bracket-for-if-condition)
+   * [xargs](#xargs)
+   * [sort](#sort)
+   * [tr](#tr)
+
+<!--te-->
+
+
+Double vs Single square bracket for if condition
+=========================
+
+```linux
+[root@mum00aqm test]# [[ $name =~ "suyo" ]] && echo "hi"
+hi
+[root@mum00aqm test]# [[ $name == "suyo" ]] && echo "hi"
+[root@mum00aqm test]# [[ $name == "suyog" ]] && echo "hi"
+hi
+```
+In above command, you can see == is for strict comparsion while ~ for patter matching, one more benefit of using double square bracket is its compact way to write if conditon, we can also use sigle square bracket
+
+Difference between [ and [[ is, [ is command test command and command completion should be marked as  ] </b>
+benefit of using [[ is, its not a command but its syntax and all these case are handled like unary operator expected mentioned in below command
+
+both command are same, but whenever there whenever there is else condition is required then we need to use second option 
+```
+[[ $name = "suyog" ]] && echo "match" 
+if [[ $name = "suyog" ]]; then echo "match"; fi
+```
+```linux
+[root@mum00aqm test]# test 4 =5
+-bash: test: 4: unary operator expected
+```
+
 xargs
 =====
 
