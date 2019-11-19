@@ -172,10 +172,10 @@ Count the occurences of special character in file ?
 5
 ```
 
-Move all files with .txt with .txt1 in same directory, if already moved then it should not move
+Move all .txt files with .txt1, if some files already moved then command should ignore that since they are already moved
 -----------------------------------------------------------------------------------------------
 
-for eg. in below ex xyz txt file already move, command should ignore that
+for eg. in below  xyz txt1 file already moved, command should ignore that
 ```
 [root@mum00aqm test]# ll
 total 0
