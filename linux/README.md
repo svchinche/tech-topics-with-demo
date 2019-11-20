@@ -252,9 +252,46 @@ spec:
   - 10.180.86.187
 ```
 
+**Some more deletion examples
+**For deleting a specific line
+```
+sed -i '5d' file.txt
+```
+**Deleting line no ranges from x to y
+```
+sed -i '2,5d' file.txt
+```
+**Delete blank line in file
+```
+sed -i '^$/d' file.txt
+```
+**Delete the blank line or starting with 
+```
+sed-i '^$/d;^#/d' file.txt
+```
 awk
 ===
 
+One of the best benefit of using awk that i found is, we can do basic calculation in command itself. See the example below
+```
+[root@mum00aqm ~]# echo "Do the sum of 4 and 5" | awk '{print $5 + $7}'
+9
+```
+
+This command is similar to cut command, but awk suppresses leading whitespaces in command standard output, this is why we use awk the most
+
+**Note:** We always keep action in curly bracket and before that we use search criteria
+```
+awk options 'selection _criteria {action }' file.txt
+```
+
+**Some builtin variables that we use frequently**
+- NF - Last field in a line
+- NR - Keep the count of number of input records, useful when you want to list file with line no
+```
+[root@mum00aqm ~]# echo "Do the sum of 4 and 5" | awk '{print $5 $NF}'
+45
+```
 
 
 Tricky interview quetions
@@ -272,7 +309,7 @@ Command to search content in file, if matches it should show next 3 lines
 ```
 *-A* : means after search context
 
-How to find total no of files and directories from current directory ?
+How to find count of files and directories from current directory ?
 -----------------------------------------------------
 ```shell
 [root@k8s-workernode shell_learning]# find . -type d | expr $(wc -l) - 1
