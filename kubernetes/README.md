@@ -7,9 +7,9 @@ Table of contents
 
 <!--ts-->
    * [Kubernetes Architecture](#installing-ansible)
+   * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
    * [Docker containers](#inventory)
    * [Resouces](#resources)
-      * [Shell module](#shell-module)
    * [CoreDNS](#cordens)
    * [Issues](#issues)
 <!--te-->
@@ -74,6 +74,60 @@ priorityclasses                   pc            PriorityClass                   
 storageclasses                    sc            StorageClass                     create delete deletecollection get list patch update watch
 volumeattachments                               VolumeAttachment                 create delete deletecollection get list patch update watch
 ```
+
+Damonset vs Statefulset vs Deployment
+======================================
+
+We can deploy Pods using 
+    * Deployment
+    * Statefulset
+    * Daemonset
+
+Deployment
+----------
+
+Statefulset
+----------
+
+Mostly all applications all statless, we can make them stateful using managing its state using session and replica.
+In deployment for database it is not possible since all pods of database will get same volum when we scale it. to solve this problem we use stateful set to assign unique identity,network and storage
+
+
+**What is Headless service?**
+We assign cluster ip to none. then each pod will get uniq network identity,stable storage
+Note: Ordering of pod is important
+
+**Creating Staefull set**
+- We need to specify which headless service we are going to use
+- Default order policy is Ordered -- in sequential order , you can specify parallel as well
+- PersistentVolumeClaimTemplate can only be used with stateful set.
+
+
+**How to debug replica set?** 
+- First describe the pod and then check the logs of pod 
+- kubectl logs --follow -n mongo mongodb-0  mongodb
+  where, mongodb-0 is pods stateful set created using mongodb pod 
+
+
+
+Daemonset
+---------
+**ReplicaSet** - Ensure that specified no of replica of pods are running at any point of time, this is based on the configuration that we specify in a spec file. Once we send the request for deployment/replica set to API server , its job of scheduler to schedule pods inside the k8s cluster.
+Now what if , we want to deploy a monitoring app on every node inside a cluster, how can we solve this problem.
+
+**Solution is using DaemonSet;**
+DaemonSet: It ensures that all/some nodes inside k8s cluster should run copy of pod.
+Example: Deploying one monitoring app instance tool per node inside k8s cluster
+Daemonset is the right controller to do this job.  once we submit doemonset manifest file to the apiserver.
+As node are added/removed in cluster, pods will be added/removed(garbage collected).
+
+**Use cases::**
+*Node monitoring Daemons* 
+- collectd
+- fluentd
+- ceph
+
+
 
 CoreDNS
 =======
