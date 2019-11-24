@@ -7,7 +7,7 @@ Table of contents
 
 <!--ts-->
    * [Kubernetes Architecture](#installing-ansible)
-   * [ReplocationController vs ReplicaSet Vs Deployment](#replocationController-vs-replicaSet-vs-deployment)
+   * [ReplicationController vs ReplicaSet Vs Deployment](#replicationcontroller-vs-replicaSet-vs-deployment)
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
    * [Docker containers](#inventory)
    * [Resouces](#resources)
@@ -18,72 +18,72 @@ Table of contents
 Resources
 =========
 
-```linux
-[root@mum00aqm ~]# kubectl api-resources list  -o wide
-NAME                              SHORTNAMES    KIND                             VERBS
-bindings                                        Binding                          create
-componentstatuses                 cs            ComponentStatus                  get list
-configmaps                        cm            ConfigMap                        create delete deletecollection get list patch update watch
-endpoints                         ep            Endpoints                        create delete deletecollection get list patch update watch
-events                            ev            Event                            create delete deletecollection get list patch update watch
-limitranges                       limits        LimitRange                       create delete deletecollection get list patch update watch
-namespaces                        ns            Namespace                        create delete get list patch update watch
-nodes                             no            Node                             create delete deletecollection get list patch update watch
-persistentvolumeclaims            pvc           PersistentVolumeClaim            create delete deletecollection get list patch update watch
-persistentvolumes                 pv            PersistentVolume                 create delete deletecollection get list patch update watch
-pods                              po            Pod                              create delete deletecollection get list patch update watch
-podtemplates                                    PodTemplate                      create delete deletecollection get list patch update watch
-replicationcontrollers            rc            ReplicationController            create delete deletecollection get list patch update watch
-resourcequotas                    quota         ResourceQuota                    create delete deletecollection get list patch update watch
-secrets                                         Secret                           create delete deletecollection get list patch update watch
-serviceaccounts                   sa            ServiceAccount                   create delete deletecollection get list patch update watch
-services                          svc           Service                          create delete get list patch update watch
-mutatingwebhookconfigurations                   MutatingWebhookConfiguration     create delete deletecollection get list patch update watch
-validatingwebhookconfigurations                 ValidatingWebhookConfiguration   create delete deletecollection get list patch update watch
-customresourcedefinitions         crd,crds      CustomResourceDefinition         create delete deletecollection get list patch update watch
-apiservices                                     APIService                       create delete deletecollection get list patch update watch
-controllerrevisions                             ControllerRevision               create delete deletecollection get list patch update watch
-daemonsets                        ds            DaemonSet                        create delete deletecollection get list patch update watch
-deployments                       deploy        Deployment                       create delete deletecollection get list patch update watch
-replicasets                       rs            ReplicaSet                       create delete deletecollection get list patch update watch
-statefulsets                      sts           StatefulSet                      create delete deletecollection get list patch update watch
-tokenreviews                                    TokenReview                      create
-localsubjectaccessreviews                       LocalSubjectAccessReview         create
-selfsubjectaccessreviews                        SelfSubjectAccessReview          create
-selfsubjectrulesreviews                         SelfSubjectRulesReview           create
-subjectaccessreviews                            SubjectAccessReview              create
-horizontalpodautoscalers          hpa           HorizontalPodAutoscaler          create delete deletecollection get list patch update watch
-cronjobs                          cj            CronJob                          create delete deletecollection get list patch update watch
-jobs                                            Job                              create delete deletecollection get list patch update watch
-certificatesigningrequests        csr           CertificateSigningRequest        create delete deletecollection get list patch update watch
-leases                                          Lease                            create delete deletecollection get list patch update watch
-events                            ev            Event                            create delete deletecollection get list patch update watch
-daemonsets                        ds            DaemonSet                        create delete deletecollection get list patch update watch
-deployments                       deploy        Deployment                       create delete deletecollection get list patch update watch
-ingresses                         ing           Ingress                          create delete deletecollection get list patch update watch
-networkpolicies                   netpol        NetworkPolicy                    create delete deletecollection get list patch update watch
-podsecuritypolicies               psp           PodSecurityPolicy                create delete deletecollection get list patch update watch
-replicasets                       rs            ReplicaSet                       create delete deletecollection get list patch update watch
-networkpolicies                   netpol        NetworkPolicy                    create delete deletecollection get list patch update watch
-poddisruptionbudgets              pdb           PodDisruptionBudget              create delete deletecollection get list patch update watch
-podsecuritypolicies               psp           PodSecurityPolicy                create delete deletecollection get list patch update watch
-clusterrolebindings                             ClusterRoleBinding               create delete deletecollection get list patch update watch
-clusterroles                                    ClusterRole                      create delete deletecollection get list patch update watch
-rolebindings                                    RoleBinding                      create delete deletecollection get list patch update watch
-roles                                           Role                             create delete deletecollection get list patch update watch
-priorityclasses                   pc            PriorityClass                    create delete deletecollection get list patch update watch
-storageclasses                    sc            StorageClass                     create delete deletecollection get list patch update watch
-volumeattachments                               VolumeAttachment                 create delete deletecollection get list patch update watch
-```
+| NAME                             | SHORTNAMES   | KIND                            | VERBS                                                      |
+|----------------------------------|--------------|---------------------------------|------------------------------------------------------------|
+| bindings                         |              | Binding                         | create                                                     |
+| componentstatuses                | cs           | ComponentStatus                 | get list                                                   |
+| configmaps                       | cm           | ConfigMap                       | create delete deletecollection get list patch update watch |
+| endpoints                        | ep           | Endpoints                       | create delete deletecollection get list patch update watch |
+| events                           | ev           | Event                           | create delete deletecollection get list patch update watch |
+| limitranges                      | limits       | LimitRange                      | create delete deletecollection get list patch update watch |
+| namespaces                       | ns           | Namespace                       | create delete get list patch update watch                  |
+| nodes                            | no           | Node                            | create delete deletecollection get list patch update watch |
+| persistentvolumeclaims           | pvc          | PersistentVolumeClaim           | create delete deletecollection get list patch update watch |
+| persistentvolumes                | pv           | PersistentVolume                | create delete deletecollection get list patch update watch |
+| pods                             | po           | Pod                             | create delete deletecollection get list patch update watch |
+| podtemplates                     |              | PodTemplate                     | create delete deletecollection get list patch update watch |
+| replicationcontrollers           | rc           | ReplicationController           | create delete deletecollection get list patch update watch |
+| resourcequotas                   | quota        | ResourceQuota                   | create delete deletecollection get list patch update watch |
+| secrets                          |              | Secret                          | create delete deletecollection get list patch update watch |
+| serviceaccounts                  | sa           | ServiceAccount                  | create delete deletecollection get list patch update watch |
+| services                         | svc          | Service                         | create delete get list patch update watch                  |
+| mutatingwebhookconfigurations    |              | MutatingWebhookConfiguration    | create delete deletecollection get list patch update watch |
+| validatingwebhookconfigurations  |              | ValidatingWebhookConfiguration  | create delete deletecollection get list patch update watch |
+| customresourcedefinitions        | crd,crds     | CustomResourceDefinition        | create delete deletecollection get list patch update watch |
+| apiservices                      |              | APIService                      | create delete deletecollection get list patch update watch |
+| controllerrevisions              |              | ControllerRevision              | create delete deletecollection get list patch update watch |
+| daemonsets                       | ds           | DaemonSet                       | create delete deletecollection get list patch update watch |
+| deployments                      | deploy       | Deployment                      | create delete deletecollection get list patch update watch |
+| replicasets                      | rs           | ReplicaSet                      | create delete deletecollection get list patch update watch |
+| statefulsets                     | sts          | StatefulSet                     | create delete deletecollection get list patch update watch |
+| tokenreviews                     |              | TokenReview                     | create                                                     |
+| localsubjectaccessreviews        |              | LocalSubjectAccessReview        | create                                                     |
+| selfsubjectaccessreviews         |              | SelfSubjectAccessReview         | create                                                     |
+| selfsubjectrulesreviews          |              | SelfSubjectRulesReview          | create                                                     |
+| subjectaccessreviews             |              | SubjectAccessReview             | create                                                     |
+| horizontalpodautoscalers         | hpa          | HorizontalPodAutoscaler         | create delete deletecollection get list patch update watch |
+| cronjobs                         | cj           | CronJob                         | create delete deletecollection get list patch update watch |
+| jobs                             |              | Job                             | create delete deletecollection get list patch update watch |
+| certificatesigningrequests       | csr          | CertificateSigningRequest       | create delete deletecollection get list patch update watch |
+| leases                           |              | Lease                           | create delete deletecollection get list patch update watch |
+| events                           | ev           | Event                           | create delete deletecollection get list patch update watch |
+| daemonsets                       | ds           | DaemonSet                       | create delete deletecollection get list patch update watch |
+| deployments                      | deploy       | Deployment                      | create delete deletecollection get list patch update watch |
+| ingresses                        | ing          | Ingress                         | create delete deletecollection get list patch update watch |
+| networkpolicies                  | netpol       | NetworkPolicy                   | create delete deletecollection get list patch update watch |
+| podsecuritypolicies              | psp          | PodSecurityPolicy               | create delete deletecollection get list patch update watch |
+| replicasets                      | rs           | ReplicaSet                      | create delete deletecollection get list patch update watch |
+| networkpolicies                  | netpol       | NetworkPolicy                   | create delete deletecollection get list patch update watch |
+| poddisruptionbudgets             | pdb          | PodDisruptionBudget             | create delete deletecollection get list patch update watch |
+| podsecuritypolicies              | psp          | PodSecurityPolicy               | create delete deletecollection get list patch update watch |
+| clusterrolebindings              |              | ClusterRoleBinding              | create delete deletecollection get list patch update watch |
+| clusterroles                     |              | ClusterRole                     | create delete deletecollection get list patch update watch |
+| rolebindings                     |              | RoleBinding                     | create delete deletecollection get list patch update watch |
+| roles                            |              | Role                            | create delete deletecollection get list patch update watch |
+| priorityclasses                  | pc           | PriorityClass                   | create delete deletecollection get list patch update watch |
+| storageclasses                   | sc           | StorageClass                    | create delete deletecollection get list patch update watch |
+| volumeattachments                |              | VolumeAttachment                | create delete deletecollection get list patch update watch |
 
-ReplocationController vs ReplicaSet Vs Deployment
+
+
+ReplicationController vs ReplicaSet Vs Deployment
 ==================================================
  All these are the replication types of replication.
  Pod is a basic execution unit of k8s application. smallest and simplest unit in k8s object model. 
  It is like docker host where we can create multiple container. in pod we can create one or more container in single pod. 
  Each pod is meant to run single instance. You should use multiple pods one for each instance. it is generally know as replication.
 
- ReplocationController
+ ReplicationController
  ---------------------
  Its original form of replication in k8s. It is easy to create multiple pods using ReplicationController and it ensures all pod always exist.</br>
  If pod crashes, then it get replaced by new pod.It also provide you the ability to scale-up and scale-down replica. </br>
