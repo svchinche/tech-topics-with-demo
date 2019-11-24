@@ -7,6 +7,7 @@ Table of contents
 
 <!--ts-->
    * [Kubernetes Architecture](#installing-ansible)
+   * [ReplocationController vs ReplicaSet Vs Deployment](#replocationController-vs-replicaSet-vs-deployment)
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
    * [Docker containers](#inventory)
    * [Resouces](#resources)
@@ -74,6 +75,31 @@ priorityclasses                   pc            PriorityClass                   
 storageclasses                    sc            StorageClass                     create delete deletecollection get list patch update watch
 volumeattachments                               VolumeAttachment                 create delete deletecollection get list patch update watch
 ```
+
+ReplocationController vs ReplicaSet Vs Deployment
+==================================================
+ All these are the replication types of replication.
+ Pod is a basic execution unit of k8s application. smallest and simplest unit in k8s object model. 
+ It is like docker host where we can create multiple container. in pod we can create one or more container in single pod. 
+ Each pod is meant to run single instance. You should use multiple pods one for each instance. it is generally know as replication.
+
+ ReplocationController
+ ---------------------
+ Its original form of replication in k8s. It is easy to create multiple pods using ReplicationController and it ensures all pod always exist.</br>
+ If pod crashes, then it get replaced by new pod.It also provide you the ability to scale-up and scale-down replica. </br>
+
+ 
+ ReplicaSet  
+ -----------
+ Replication controller is being replica set. </br>
+ ReplicaSet has more options for selector ie matchLables and matchExpressions. </br>
+ RoplicaSet does not support rollingUpdate while ReplicationController does. This is becuase replica set is meant to be used as backend for deployment.
+ 
+ Deployment
+ ----------
+ Deployments are intended to replace replicationController. It provide the feature of replicaSet and ReplicaController. That makes it more powerful.</br>
+ 
+ 
 
 Damonset vs Statefulset vs Deployment
 ======================================
