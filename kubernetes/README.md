@@ -6,16 +6,144 @@ Table of contents
 =================
 
 <!--ts-->
-   * [Kubernetes Architecture](#installing-ansible)
+   * [Container](#containers)
+       * [changeroot](#changeroot)
+       * [cgroups](#cgroups)
+       * [namespaces](#namespaces)
+       * [Virtual Machines vs Containers](#virtual-machines-vs-containers)
+   * [Kubernetes Architecture](#kubernetes-architecture)
+   * [kubernetes Resources](#kubernetes-resources)
    * [ReplicationController vs ReplicaSet Vs Deployment](#replicationcontroller-vs-replicaSet-vs-deployment)
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
-   * [Docker containers](#inventory)
-   * [Resouces](#resources)
    * [CoreDNS](#cordens)
    * [Issues](#issues)
 <!--te-->
 
-Resources
+Containers
+=========
+Customized isolated process running inside ur os. as they shares a same kernel, os does not treat them differently.
+containers use kernel feature to create isolated runtime env. This docker feature is almost available on all linux kernels which allows docker to create isolated process
+
+Kernel does not provision isolated runtime environemt to docker.
+First idea of process isolation comes with a chroot system call (1979)
+
+changeroot
+---------- 
+is an operation that changes the apparent root directory of process and its children.
+using chroot we can change root directory of new bash process that we lanched.
+chroot is not enough to toal process isolation as it just modifies the path name lookup and its childer-- but it was first demonstarttion of process isolation
+
+Today containers are basically chroot on steroids
+in 2008 we had LXC -- linux containers, docker is built on LXC but shifter recently with lib container.
+
+docker and LXC built based on two Linux features.
+- namespaces
+- cgroups - Control groups to access the resources
+
+cgroups
+-------
+- heirarchial group structure
+- individual node represent the process
+- seperate heirarchy structure for individual resource controllers (redhat say subsystem to this)
+Let see the cgroup heirarchy using
+```linux
+[root@mum00ban ~]# systemd-cgls cpu
+cpu:
+├─    1 /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+├─ 2472 /usr/lib/systemd/systemd-journald
+├─ 2525 /usr/sbin/lvmetad -f
+├─ 2536 /sbin/multipathd
+├─ 2546 /usr/lib/systemd/systemd-udevd
+├─ 3511 /bin/sh ./startNodeManager.sh
+├─ 3513 /bin/sh /scratch/app/product/fmw/wlserver/server/bin/startNodeManager.sh
+├─ 3560 /u01/app/product/jdk/bin/java -server -Xms32m -Xmx200m -Djdk.tls.ephemeralDHKeySize=2048 -Dcoherence.home=/u01/app/product/fmw/w
+├─ 4510 /sbin/auditd -n
+├─ 4542 /sbin/audispd
+├─ 4544 /usr/sbin/sedispatch
+├─ 4548 /usr/sbin/alsactl -s -n 19 -c -E ALSA_CONFIG_PATH=/etc/alsa/alsactl.conf --initfile=/lib/alsa/init/00main rdaemon
+├─ 4549 /usr/sbin/ModemManager
+├─ 4550 /usr/bin/lsmd -d
+├─ 4553 /usr/sbin/rsyslogd -n
+├─ 4555 /usr/lib/systemd/systemd-logind
+```
+
+Here, we can see docker has created two subgroups for two container, so all of this process under this containers will belong to same container cgroups/system unit. </br>
+hence, we its easy to control resource limit by putting resouce restriction to container subgroup rather controlling at process level.</br>
+similarly we can give cgroup subsystem for memory </br>
+
+Cgroups vs namespaces</br>
+cgroups:: limit what processes use </br>
+namespace: limit of what processes see </br>
+
+namespaces
+---------
+Namespace is used by process to see and identify system resources, so by manipulating namespaces you can restrict the what process see and can not see on ur system.
+This is key feature for isolation
+
+Linux Namespaces
+- ipc
+- mount mnt
+- network net
+- pid
+- user uid
+- UTS
+
+```
+[root@mum00aqm ~]# ls -l /proc/11298/ns
+total 0
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 cgroup -> cgroup:[4026531835]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 ipc -> ipc:[4026531839]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 mnt -> mnt:[4026531840]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 net -> net:[4026532185]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 pid -> pid:[4026531836]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 pid_for_children -> pid:[4026531836]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 user -> user:[4026531837]
+lrwxrwxrwx 1 root root 0 Nov 23 13:34 uts -> uts:[4026531838]
+```
+Note that namespace will get distroyed last process from that namespace exits.
+Namespace enable us to grab a global system resouce such that process within that namespace.
+It appears that it has their own isolated instance of same resource
+
+Container runtime 
+
+based on cgroudps and namespaces
+-docker 
+- lxc
+- systemd-nspawn
+
+Based on other mechanizm
+- openvz
+- jails
+
+Virtual Machies vs Containers
+----------------------------
+VM - we install multiple OS on top of hypervisor, all these operating system will have separate kernel to process the request.
+---
+Containers - 
+----------
+Now the kernel runs containerization daemon like docker. this daemon is resposible for creating isolated runtime env.
+each containers will have its own set of libraries and dependencies and each containers can have seperate apps in isolation with each other.
+The abstraction of hardware is manged by kernel iteslef, daemon is responsible for crating/deleting the continers using kernel feature
+
+Kubernetes Architecture
+======================
+
+ETCD
+====
+Distributed reliable key value store, key value stores data in the form of document for each individual data.
+each individual, we get a document where we can add and delete key which will not affect others pages.
+we can transact this data with json and yaml
+
+Quorum (Majority)
+on HA env having 1 oor 2 insatnce doesn't really make any sense,  since if one of instance get down our cluster will get fail.
+as one of instance get down it will live you without quorum and cluster will be non functional.
+thats why having odd no of nodes are preferrred over the even
+It gives you a better chance of keeping network alive in case of odd no of nodes
+
+
+
+
+Kubernetes Resources
 =========
 
 | NAME                             | SHORTNAMES   | KIND                            | VERBS                                                      |
@@ -100,8 +228,7 @@ ReplicationController vs ReplicaSet Vs Deployment
  Deployments are intended to replace replicationController. It provide the feature of replicaSet and ReplicaController. That makes it more powerful.</br>
  
  
-
-Damonset vs Statefulset vs Deployment
+Daemonset vs Statefulset vs Deployment
 ======================================
 
 We can deploy Pods using 
