@@ -6,8 +6,13 @@ Table of contents
 =================
 
 <!--ts-->
-   * [what is Devops](#what-is-devops)
+   * [Devops](#devops)
    * [How to start working in devops](#how-to-start-working-in-devops)
+   * [Jenkins](#jenkins)
+      * [Declarative vs scripted](#declarative-vs-scripted)
+      * [Resuming build from failed stage](#resuming-build-from-failed-stage)
+      * [Backup and Restoration](#backup-and-restoration)
+   * [Monolithic vs Microservice](#monolithic-vs-microservice )
    * [Working with Docker Private Registry](#working-with-docker-private-registry)
    * [Roles and Responsibilities of Devops Engg](#roles-and-responsibilities-of-devops-engg)
    * [Roles and Responsibilities of Cloud Engg](#roles-and-responsibilities-of-cloud-engg)
@@ -15,11 +20,39 @@ Table of contents
    * [Best practices for Jenkins](#best-practices-for-jenkins)
 <!--te-->
 
- What is Devops?
+Devops
  ==============
-* Devops 
 Devops is a collection architecture, tools that increases organization ability to deliver applications and services at rapid pace
 
+
+How to start working in devops
+==============================
+You should have proper understanding of how below things implemented manually.
+- How projects get build ?
+- How Central code repository is managed for multiple teams.(git workflow strategies) ?
+- How unit testing is helpful to test individual module ?
+
+Jenkins
+=======
+
+Declarative vs Scripted
+-----------------------
+
+**declarative:** must be enclosed within a pipeline {} block 
+
+**scripted:** always are enclosed within a node {} block
+
+* Use case :
+
+Resuming build from failed stage
+--------------------------------
+
+
+Backup and Restoration
+--------------------
+
+Monolithic vs Microservice 
+==========================
 
 * Difference between monolithic and microservice based application
     * Monolythic application 
