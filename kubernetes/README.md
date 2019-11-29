@@ -316,7 +316,8 @@ Note:: Here, we are using replace since we dont know how this ConfigMap is creat
 Issues
 ======
 
-* Bigger context error when using integer variable in environment section
+Bigger context error when using integer variable in environment section
+------------------------------------------------------------------------
 ```linux
 [root@mum00aqm k8s-ccoms-saas-deployment]# kubectl apply -f ccoms-empms.yaml
 Error from server (BadRequest): error when creating "ccoms-empms.yaml": Deployment in version "v1" cannot be handled as a Deployment: v1.Deployment.Spec: 
@@ -325,6 +326,22 @@ but found 8, error found in #10 byte of ...|,"value":8080}],"ima|..., bigger con
 "imagePullPo|...
 ```
 
-*Solution::* 
+**Solution::** 
 If you are using any integer variable in environment section, keep that value in double quote </br>
 use value: "8080" instead value: 8080
+
+
+Evicted status of pods.
+-----------------------
+* Check why this node get into evicted state using kubectl describe command
+```linux
+[root@mum00aqm ~]# kubectl describe -n ccoms pod/proxy-ms-574975694d-t585r
+Status:             Failed
+Reason:             Evicted
+Message:            Pod The node was low on resource: [DiskPressure].
+IP:
+```
+* Remove all pods which are in evicted state
+```linux
+kubectl get pods -n ccoms | grep Evicted | awk '{print $1}' | xargs kubectl delete -n ccoms pod
+```
