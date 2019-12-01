@@ -21,7 +21,7 @@ Table of contents
 
 Containers
 =========
-Customized isolated process running inside ur os. as they shares a same kernel, os does not treat them differently.
+Customized isolated process running inside our os. as they shares a same kernel, os does not treat them differently.
 containers use kernel feature to create isolated runtime env. This docker feature is almost available on all linux kernels which allows docker to create isolated process
 
 Kernel does not provision isolated runtime environemt to docker.
@@ -31,10 +31,10 @@ changeroot
 ---------- 
 is an operation that changes the apparent root directory of process and its children.
 using chroot we can change root directory of new bash process that we lanched.
-chroot is not enough to toal process isolation as it just modifies the path name lookup and its childer-- but it was first demonstarttion of process isolation
+chroot is not enough to total process isolation as it just modifies the path name lookup for the processes and its children processes. but it was first demonstarttion of process isolation
 
 Today containers are basically chroot on steroids
-in 2008 we had LXC -- linux containers, docker is built on LXC but shifter recently with lib container.
+in 2008 we had LXC -- linux containers, docker is built on LXC but shifted recently with lib container.
 
 docker and LXC built based on two Linux features.
 - namespaces
@@ -45,6 +45,7 @@ cgroups
 - heirarchial group structure
 - individual node represent the process
 - seperate heirarchy structure for individual resource controllers (redhat say subsystem to this)
+
 Let see the cgroup heirarchy using
 ```linux
 [root@mum00ban ~]# systemd-cgls cpu
