@@ -21,8 +21,12 @@ Table of contents
 <!--te-->
 
 Devops
- ==============
+==============
 Devops is a collection architecture, tools that increases organization ability to deliver applications and services at rapid pace
+
+Devops lifecycle
+----------------
+
 
 
 How to start working in devops
