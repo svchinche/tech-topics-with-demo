@@ -5,6 +5,7 @@ Table of contents
 
 <!--ts-->
    * [Unit Files](#unit-files)
+   * [tmpfs vs ramfs and swap](tmpfs-vs-ramfs-and-swap)
    * [Double vs Sigle square bracket for if condition](#double-vs-single-square-bracket-for-if-condition)
    * [cut](#cut)
    * [xargs](#xargs)
@@ -95,6 +96,55 @@ Sep 03 09:50:40 worker-node1 start_containers.sh[5060]: Starting host3 ...
 Sep 03 09:51:03 worker-node1 start_containers.sh[5060]: [155B blob data]
 [root@worker-node1 ansible_hosts]#
 ```
+
+tmpfs vs ramfs and swap
+=======================
+
+Ram based storage can be created using
+----------------------------------------
+- tmpfs [more recent ramfs]  </br>
+- ramfs [it will use memory storage until systtem run out of of the ram- no limit on size ]  </br>
+It is intended to appear mounted fs, but the data is stored at volatile memory  </br>
+The major benefit to memory based file systems is that they are very fast – 10s of times faster than modern SSDs.  </br>
+Read and write performance is massively increased for all workload types.  </br>
+
+tmpfs vs swap
+-------------
+tmpfs may use swap fs space.  If your system runs out of physical RAM, files in your tmpfs partitions may be written to disk based SWAP partitions and  </br>
+will have to be read from disk when the file is next accessed
+
+SWAP
+----
+Linux kernel uses RAM to store temparary info.  </br>
+useful to extend the ram, when ram space is exhausted and process have to be continued.  </br>
+Process which are waiting for other resource since too much time will get moved to swap.  </br>
+Zombie processes get moved into the swap.  </br>
+
+How to create swap
+------------------
+* Create file using fallocate or dd command
+```
+fallocate -l 1G /swapfile
+dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+```
+
+* assign file system to that file -- setup swap on file
+```
+mkswap /swapfile
+```
+* add this file to swap space-- enabling
+```
+swapon /swapfile
+```
+* make permanent entry in etc fstab conf file
+
+How to adjust the swappiness value
+---------------------------------
+Swappiness is a Linux kernel property that defines how often the system will use the swap space. </br>
+Swappiness can have a value between 0 and 100. A low value will make the kernel to try to avoid 
+swapping whenever possible while a higher value will make the kernel to use the swap space more aggressively.
+The default swappiness value is 60. You can check the current swappiness value by typing the following command:</br>
+
 
 Double vs Single square bracket for if condition
 =========================
