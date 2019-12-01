@@ -12,7 +12,9 @@ Table of contents
    * [tr](#tr)
    * [sed](#sed)
    * [awk](#awk)
+   * [How ssl works](#how-ssl-works)
    * [tricky interview quetions](#tricky-interview-quetions)
+  
 
 <!--te-->
 
@@ -369,7 +371,40 @@ awk options 'selection _criteria {action }' file.txt
 [root@mum00aqm ~]# echo "Do the sum of 4 and 5" | awk '{print $5 $NF}'
 45
 ```
+How SSL Works
+=============
 
+How SSL Works
+=============
+
+
+**What is trusted and self signed certificate**
+
+Self Signed Certificate
+-----------------------
+openssl req -newkey rsa:2048 -nodes -keyout domain.key-x509 -days 365 -out domain.crt
+
+Trusted Certificate
+-----------------
+Raise a csr 
+
+openssl req  -new -newkey rsa:2048 -nodes -keyout privatekey.key –out certificatesigningrequest.csr
+
+
+
+How to check validity of certificate?
+------------------------------------
+```
+echo | openssl s_client  -connect <hostname>:<port no> -tls1_2  2>/dev/null | grep "public key is" | awk '{print $5}'
+```
+
+How to check cipher and protocol information?
+------------------------------------------
+```
+echo | openssl s_client  -connect <hostname>:<port no> -"<protocol>" 2>/dev/null | grep -i supported
+
+echo|  openssl s_client  -connect <hostname>:<port no>  -cipher <cipher> 2>/dev/null | grep -i supported
+```
 
 Tricky interview quetions
 =========================
@@ -429,3 +464,5 @@ total 0
 -rw-r--r-- 1 root root 0 Nov 19 17:46 ghj.txt1
 -rw-r--r-- 1 root root 0 Nov 19 17:48 xyz.txt1
 ```
+
+
