@@ -4,6 +4,7 @@ Table of contents
 =================
 
 <!--ts-->
+   * [Unit Files](#unit-files)
    * [Double vs Sigle square bracket for if condition](#double-vs-single-square-bracket-for-if-condition)
    * [cut](#cut)
    * [xargs](#xargs)
@@ -15,7 +16,83 @@ Table of contents
 
 <!--te-->
 
+Unit Files
+==========
 
+**Use Case:: Script or service should start at the time of machine boot**
+
+We can do this by two ways.
+* Using reboot annotation in crontab
+* System unit file 
+
+System Unit file
+----------------
+1. Create a script whch do a certain task, and that task we want it to be in running state after system boot.
+```shell
+[root@worker-node1 ansible_hosts]# cat  /root/startup_scripts/start_containers.sh 
+#!/bin/bash
+
+## Starting sonar cube container , no need to handle this case as since if container is in running mode it wont start 
+docker start sonarqube-article
+
+## starting nexus repo service is not required since it is enabled as part runlevels
+
+## Starting elk containers 
+cd /root/docker_projects/elk_project/docker-elk ; 
+docker-compose up -d
+
+## Starting ansible hosts
+cd /root/docker_projects/ansible_hosts/ ; docker-compose start
+
+
+###starting filebeat services
+/etc/init.d/filebeat start
+```
+
+2. Create unit file for the resource/service that you want to control using systemctl command
+
+```linux
+
+# /etc/systemd/system/start_container.service
+[Unit]
+Description=Description for sample script goes here
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/root/startup_scripts/start_containers.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
+```
+**Note:** File can be viewed directly from systemctl cat command
+```
+[root@worker-node1 ansible_hosts]# systemctl cat start_container.service
+```
+3. Reload the system daemon to get the new changes for systemctl command
+systemctl daemon-reload
+
+4. Enable the service
+```
+[root@worker-node1 ansible_hosts]# systemctl enable start_container.service
+```
+
+5. Check the logs of service 
+```
+[root@worker-node1 ansible_hosts]# journalctl -u start_container.service
+-- Logs begin at Tue 2019-09-03 09:48:38 IST, end at Tue 2019-09-03 15:29:28 IST. --
+Sep 03 09:50:08 worker-node1 systemd[1]: Started Description for sample script goes here.
+Sep 03 09:50:15 worker-node1 start_containers.sh[5060]: sonarqube-article
+Sep 03 09:50:17 worker-node1 start_containers.sh[5060]: Starting docker-elk_elasticsearch_1 ...
+Sep 03 09:50:22 worker-node1 start_containers.sh[5060]: [97B blob data]
+Sep 03 09:50:22 worker-node1 start_containers.sh[5060]: Starting docker-elk_logstash_1      ...
+Sep 03 09:50:40 worker-node1 start_containers.sh[5060]: [134B blob data]
+Sep 03 09:50:40 worker-node1 start_containers.sh[5060]: Starting host2 ...
+Sep 03 09:50:40 worker-node1 start_containers.sh[5060]: Starting host3 ...
+Sep 03 09:51:03 worker-node1 start_containers.sh[5060]: [155B blob data]
+[root@worker-node1 ansible_hosts]#
+```
 
 Double vs Single square bracket for if condition
 =========================
