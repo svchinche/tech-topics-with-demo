@@ -26,6 +26,8 @@ Devops is a collection architecture, tools that increases organization ability t
 
 Devops lifecycle
 ----------------
+<p align="center"><img width="800" height="400" src=".images/pipeline-overview-update-1-31-17.png"></p>
+
 
 
 
@@ -78,6 +80,7 @@ Implementation
 
 Workflow of jenkins pipeline 
 ---------------------------
+Workflow of jenkins can be seen using blueocean plugin as below.
 <p align="center"><img width="800" height="400" src=".images/jenkins_blue_occean.PNG"></p>
 
 
