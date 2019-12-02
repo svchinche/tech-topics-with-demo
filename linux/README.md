@@ -445,6 +445,9 @@ openssl req  -new -newkey rsa:2048 -nodes -keyout privatekey.key –out certific
 How to check validity of certificate?
 ------------------------------------
 ```
+PROTOCOLS=(ssl2 ssl3 tls1  tls1_1  tls1_2)
+CIPHERS=(RC4 DES DES:3DES)
+
 echo | openssl s_client  -connect <hostname>:<port no> -tls1_2  2>/dev/null | grep "public key is" | awk '{print $5}'
 ```
 
