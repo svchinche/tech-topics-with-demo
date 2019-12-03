@@ -459,6 +459,17 @@ echo | openssl s_client  -connect <hostname>:<port no> -"<protocol>" 2>/dev/null
 echo|  openssl s_client  -connect <hostname>:<port no>  -cipher <cipher> 2>/dev/null | grep -i supported
 ```
 
+| Command purpose                                                                                                | Command                                                                                                                                                                                                                                                                                                                                                    |
+|----------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Step 1 \- Create private key and a private key store for aforementioned created key \(\.\.identity\.jck file\) | keytool \-genkey \-alias \`hostname \-f` \-keyalg RSA \-keysize 2048 \-sigalg SHA256withRSA \-validity 1095 \-keypass "GkTjn03zfpJ8Weq9" \-storetype jceks \-keystore `hostname \-f`\_identity\.jck \-storepass "GkTjn03zfpJ8Weq9"   \-dname "CN=`hostname \-f`, OU=Oracle Cloud for Industry, O=Oracle Corporation, L=Redwood Shores, S=California, C=US" |
+| Step 2 \- Create public key certificate \(\.cer file\)                                                         | keytool \-export \-alias \`hostname \-f` \-file `hostname \-f`\.cer \-keystore `hostname \-f`\_identity\.jck \-storetype jceks \-storepass "GkTjn03zfpJ8Weq9"                                                                                                                                                                                              |
+| Step 3 \- Import the created public key certificate into the trust store \(\.\.trust\.jck file\)               | keytool \-import \-alias \`hostname \-f` \-file `hostname \-f`\.cer \-keystore `hostname \-f`\_trust\.jck \-storetype jceks \-storepass "GkTjn03zfpJ8Weq9" \-noprompt                                                                                                                                                                                      |
+| List all private \(identity\) keys in private \(identity\) key store                                           | keytool \-list \-keystore \`hostname \-f`\_identity\.jck \-storetype jceks \-storepass "GkTjn03zfpJ8Weq9"                                                                                                                                                                                                                                                  |
+| List all public \(trust\) keys in public \(trust\) key store                                                   | keytool \-list \-keystore \`hostname \-f`\_trust\.jck \-storetype jceks \-storepass "GkTjn03zfpJ8Weq9"                                                                                                                                                                                                                                                     |
+
+
+
+
 Tricky interview quetions
 =========================
 
