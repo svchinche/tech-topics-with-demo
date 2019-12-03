@@ -30,13 +30,16 @@ List
 * can add duplicate elements (supports redudancy)
 
 * ArryList 
-    * Data get added in indexed approach
-    * We can create dynamic arry is arraylist
+    * ArrayList is implemented as a resizable array.
+    * As more elements are added to ArrayList, its size is increased dynamically.
+    * It's elements can be accessed directly by using the get and set methods, since ArrayList is essentially an array.
 
 * Linkedlist
-    * Sequence of link
-    * Single Node - node contains data and the info/reference/pointer of next node
-    * Doubly- Node contains data and the info of prev and next node
+    * LinkedList is implemented as a double linked list. 
+    * Its performance on add and remove is better than Arraylist, but worse on get and set methods. 
+    * Single vs double linked list 
+	      * Single - Used for stack
+		    * Double Linked List -  implement stacks as well as heaps and binary trees.
 
 * Vector
     * similar to Arraylist , but vector is synchronized.
