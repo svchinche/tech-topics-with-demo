@@ -38,8 +38,8 @@ List
     * LinkedList is implemented as a double linked list. 
     * Its performance on add and remove is better than Arraylist, but worse on get and set methods. 
     * Single vs double linked list 
-	      * Single - Used for stack
-		    * Double Linked List -  implement stacks as well as heaps and binary trees.
+         * Single - Used for stack
+         * Double Linked List -  implement stacks as well as heaps and binary trees.
 
 * Vector
     * similar to Arraylist , but vector is synchronized.
