@@ -1,7 +1,6 @@
 Learning Java
 ================
 
-
 Table of contents
 =================
 
@@ -14,9 +13,7 @@ Table of contents
 Collections Framework
 ===================
 
-Java Collections Framework
-- heirarchy-- relationship between various api
--
+**Java Collections Framework -heirarchy-- relationship between various api **
 
 Iterator
 --------
@@ -58,4 +55,4 @@ List
     * data is being added is not indexed
     * basically we get the hashcode of which we added
 
-** Performance of tree set slower since it takes time for sorting the data.
+**Performance of tree set slower since it takes time for sorting the data.**
