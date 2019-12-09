@@ -198,7 +198,18 @@ Use backup plugin to take a backup.
 * The list of backup’s will be shown, click on the appropriate one to click on Launch Restore to begin the restoration of the backup.
 
 
+How developers work on feedback or issues reported by Jenkins?
+-----------------------------------------------------------
 
+In continous integration phase, if any mistake happens in build stage like compilation, static code analysis problems (null pointer dereferencing, variable is nowhere used, formatting), java code coverage is less, these feedback will send to culprit.
+and they start working on that.
+
+See below, How developer checks
+* Code coverage.
+<p align="center"><img width="800" height="400" src=".images/developer_checking_code_coverage.PNG"></p>
+
+* Do static analysis
+<p align="center"><img width="800" height="400" src=".images/developer_checking_static_code_analysis.PNG"></p>
 
 
 
