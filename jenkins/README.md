@@ -13,6 +13,7 @@ Table of contents
       * [Resuming build from failed stage](#resuming-build-from-failed-stage)
       * [Backup and Restoration](#backup-and-restoration)
    * [Monolithic vs Microservice](#monolithic-vs-microservice )
+   * [Testing](#testing)
    * [Working with Docker Private Registry](#working-with-docker-private-registry)
    * [Roles and Responsibilities of Devops Engg](#roles-and-responsibilities-of-devops-engg)
    * [Roles and Responsibilities of Cloud Engg](#roles-and-responsibilities-of-cloud-engg)
@@ -217,6 +218,33 @@ Monolithic vs Microservice
 
     * Disadvantages of microservices 
         - Microservice make terribe to analyze the issue 
+     
+     
+Testing
+========
+
+There are two main catagoeries of testing.
+
+Blackbox
+-------
+
+Focuses on functional testing, without knowing the internal architecture.
+
+Whitebox 
+--------
+
+Focuses on internal mechanism/architecture of s system.
+
+
+
+* Unit Testing - to test whether developed module is producing desired output or not.</br>
+* Integration Testing - Group of components are combined to produce the output.</br>
+* System testing - to ensure application work on different env. </br>
+* Acceptance testing - specific functionality required in the system requirements should work </br>
+* Stress - to evaluate how system behaves under unfavorable condition. </br>
+* Beta - pre -release version, to cover unexpected errors comes during initial phase of release. </br>
+* Smoke- provided build by development to QA team is ready to accept further testing </br>
+* Regression - Done by QA tester to check individual module thoroughly </br>
 
 Working with Docker Private Registry
 =======================
