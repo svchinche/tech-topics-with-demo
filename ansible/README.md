@@ -18,6 +18,7 @@ Table of contents
    * [Vaults](#vaults)
    * [Python and Pip installation](#python-and-pip-installation)
    * [Understanding Relative directories using builtin ansible variables](#understanding-relative-directories-using-builtin-ansible-variables)
+   * [Delegates] (#delegates)
    * [Best Practices for using roles](#best-practices-for-roles)
 <!--te-->
 
@@ -395,6 +396,18 @@ Where dot means project home directory
 ./playbook_dir
 ```
 
+Delegates
+=========
+
+Delegation
+========
+
+If you too delegate certain task to different host, that we can do using.</br>
+```yaml
+delegate_to: hostname
+local_action: 
+    command: hostname 
+```
 Best practices for roles
 ======================== 
 
