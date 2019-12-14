@@ -160,6 +160,9 @@ Docker Network
 Kubernetes Architecture
 ======================
 
+<p align="center"><img width="460" height="300" src=".images/kubertes.png"></p>
+
+
 Master Components
 -----------------
 
