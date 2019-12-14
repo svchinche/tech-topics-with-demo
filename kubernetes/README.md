@@ -110,7 +110,7 @@ It appears that it has their own isolated instance of same resource
 Container runtime 
 
 based on cgroudps and namespaces
--docker 
+- docker 
 - lxc
 - systemd-nspawn
 
@@ -118,7 +118,7 @@ Based on other mechanizm
 - openvz
 - jails
 
-Virtual Machies vs Containers
+Virtual Machines vs Containers
 ----------------------------
 VM - we install multiple OS on top of hypervisor, all these operating system will have separate kernel to process the request.
 ---
