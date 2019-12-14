@@ -10,6 +10,7 @@ Table of contents
    * [How to start working in devops](#how-to-start-working-in-devops)
    * [Jenkins](#jenkins)
       * [Declarative vs scripted](#declarative-vs-scripted)
+      * [Jenkins Components](#jenkins-components)
       * [Resuming build from failed stage](#resuming-build-from-failed-stage)
       * [Backup and Restoration](#backup-and-restoration)
    * [Monolithic vs Microservice](#monolithic-vs-microservice )
@@ -74,6 +75,36 @@ Scripted.
 Pipeline’s work inside of a node block does two things:
 * Schedules the steps contained within the block to run by adding an item to the Jenkins queue. As soon as an executor is free on a node, the steps will run. </br>
 * Creates a workspace (a directory specific to that particular Pipeline) where work can be done on files checked out from source control. </br>
+
+Jenkins Components
+==================
+
+Jenkins Scripting Components
+=============================
+
+Section
+-------
+* Pipeline - Top level block of a pipeline
+* Node - Mainly used for sprited pipeline
+* Stage - Contains series of steps
+* Step - Single task that executes specific process at a defined time.
+* post - will run on completion of stage or pipeline. -- Condition block – changed success, always, failure, unstable
+
+
+Directives
+--------
+* environment
+* options
+* parameters
+* triggers - cron, pollscm, upstream
+* stage
+* tools
+* parallel
+* inside stage directives
+    * input 
+    * when  built-in conditions are -- branch,tag  && nested conditions allof, anyof, not
+    * options 
+* steps - will tell Jenkins what to do.
 
 
 Implementation
