@@ -138,27 +138,60 @@ Docker Architecture
 
 Docker Network
 ---------------
-* Bridge 
+* Bridge </br>
   Create a private newtwork internal to the host so containers on this network can communicate.   </br>
   Behind the scenes, the Docker Engine creates the necessary Linux bridges, internal interfaces, iptables rules, and host routes to make this connectivity possible
 
-* Host
+* Host </br>
   This driver removes the network isolation between docker containers and docker host.
   
-* overlay
+* Overlay </br>
   This network enables swarm services to communicate with each other
   
-* macvlan
+* macvlan </br>
   This driver assigns mac address to containers to make them look like physical devices. </br>
   The traffic is routed between containers through their mac addresses. </br>
   This network is used when you want the containers to look like a physical device, for example, while migrating a VM setup. </br>
   
-* none
+* none </br>
   This driver disables all the networking.
   
   
 Kubernetes Architecture
 ======================
+
+Master Components
+-----------------
+
+* etcd cluster  </br>
+  a simple, distributed key value storage which is used to store the Kubernetes cluster data (such as number of pods, their state, namespace, etc), API objects and service discovery details. </br> 
+  It is only accessible from the API server for security reasons. etcd enables notifications to the cluster about configuration changes with the help of watchers. </br> Notifications are API requests on each etcd cluster node to trigger the update of information in the node’s storage.
+
+* kube-apiserver </br>
+  Kubernetes API server is the central management entity that receives all REST requests for modifications (to pods, services, replication sets/controllers and others), serving as frontend to the cluster. Also, this is the only component that communicates with the etcd cluster, making sure data is stored in etcd and is in agreement with the service details of the deployed pods.
+
+* kube-controller-manager </br>
+  runs a number of distinct controller processes in the background (for example, replication controller controls number of replicas in a pod, endpoints controller populates endpoint objects like services and pods, and others) to regulate the shared state of the cluster and perform routine tasks. When a change in a service configuration occurs (for example, replacing the image from which the pods are running, or changing parameters in the configuration yaml file), the controller spots the change and starts working towards the new desired state.
+  
+* cloud-controller-manager </br>
+  is responsible for managing controller processes with dependencies on the underlying cloud provider (if applicable). For example, when a controller needs to check if a node was terminated or set up routes, load balancers or volumes in the cloud infrastructure, all that is handled by the cloud-controller-manager.
+
+* kube-scheduler </br>
+  helps schedule the pods (a co-located group of containers inside which our application processes are running) on the various nodes based on resource utilization. It reads the service’s operational requirements and schedules it on the best fit node. For example, if the application needs 1GB of memory and 2 CPU cores, then the pods for that application will be scheduled on a node with at least those resources. The scheduler runs each time there is a need to schedule pods. The scheduler must know the total resources available as well as resources allocated to existing workloads on each node.
+
+Node (worker) components
+-------------------------
+
+* kubelet </br>
+  the main service on a node, regularly taking in new or modified pod specifications (primarily through the kube-apiserver) and ensuring that pods and their containers are healthy and running in the desired state. This component also reports to the master on the health of the host where it is running.
+
+* kube-proxy </br>
+  a proxy service that runs on each worker node to deal with individual host subnetting and expose services to the external world. It performs request forwarding to the correct pods/containers across the various isolated networks in a cluster.
+
+* kubectl </br>
+  kubectl command is a line tool that interacts with kube-apiserver and send commands to the master node. Each command is converted into an API call.
+
+
 
 ETCD
 ====
