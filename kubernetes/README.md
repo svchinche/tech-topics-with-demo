@@ -11,6 +11,8 @@ Table of contents
        * [cgroups](#cgroups)
        * [namespaces](#namespaces)
        * [Virtual Machines vs Containers](#virtual-machines-vs-containers)
+   * [Docker Architecture](#docker-architecture)
+       * [Docker Network](#docker-network)
    * [Kubernetes Architecture](#kubernetes-architecture)
    * [kubernetes Resources](#kubernetes-resources)
    * [ReplicationController vs ReplicaSet Vs Deployment](#replicationcontroller-vs-replicaSet-vs-deployment)
@@ -126,6 +128,35 @@ Now the kernel runs containerization daemon like docker. this daemon is resposib
 each containers will have its own set of libraries and dependencies and each containers can have seperate apps in isolation with each other.
 The abstraction of hardware is manged by kernel iteslef, daemon is responsible for crating/deleting the continers using kernel feature
 
+
+Docker Architecture
+===================
+* Docker Engine -- Server, Rest API, CLI
+* Docker Client --  when any docker command runs, the client sends them to dockerd daemon
+* Docker registries
+* Docker Objects -- images, containers, volumes, network
+
+Docker Network
+---------------
+* Bridge 
+  Create a private newtwork internal to the host so containers on this network can communicate.   </br>
+  Behind the scenes, the Docker Engine creates the necessary Linux bridges, internal interfaces, iptables rules, and host routes to make this connectivity possible
+
+* Host
+  This driver removes the network isolation between docker containers and docker host.
+  
+* overlay
+  This network enables swarm services to communicate with each other
+  
+* macvlan
+  This driver assigns mac address to containers to make them look like physical devices. </br>
+  The traffic is routed between containers through their mac addresses. </br>
+  This network is used when you want the containers to look like a physical device, for example, while migrating a VM setup. </br>
+  
+* none
+  This driver disables all the networking.
+  
+  
 Kubernetes Architecture
 ======================
 
