@@ -14,6 +14,7 @@ Table of contents
    * [Docker Architecture](#docker-architecture)
        * [Docker Network](#docker-network)
    * [Kubernetes Architecture](#kubernetes-architecture)
+   * [Networking services](#networking-services)
    * [kubernetes Resources](#kubernetes-resources)
    * [ReplicationController vs ReplicaSet Vs Deployment](#replicationcontroller-vs-replicaSet-vs-deployment)
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
@@ -209,7 +210,63 @@ thats why having odd no of nodes are preferrred over the even
 It gives you a better chance of keeping network alive in case of odd no of nodes
 
 
+Networking services
+===================
 
+to accesss the pods outside/inside k8s cluster we use services and it is based on label selector
+
+Services are:
+
+* Cluster IP (inside k8s cluster)
+
+Cluster IP is the default approach when creating a Kubernetes Service. The service is allocated an internal IP that other components can use to access the pods.
+
+* Target Ports (inside k8s cluster)
+
+Use to create port for internal cluster.
+```
+master $ kubectl get svc
+NAME                               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+webapp1-clusterip-targetport-svc   ClusterIP   10.100.73.107   <none>        8080/TCP   4m30s  
+```
+
+* NodePort (outside k8s cluster)
+
+ NodePort exposes the service on each Node’s IP via the defined static port. 
+ No matter which Node within the cluster is accessed, the service will be reachable based on the port number defined.
+ 
+--service-node-port-range flag (default: 30000-32767)
+
+```
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30080
+```
+
+* External IPs (outside k8s cluster)
+Another approach to making a service available outside of the cluster is via External IP addresses.
+```
+ ports:
+  - port: 80
+  externalIPs:
+  - 172.17.0.47
+  selector:
+    app: webapp1-externalip
+```
+
+* Load Balancer (outside k8s cluster)
+it's possible to dynamically allocate IP addresses to LoadBalancer type services. This is done by deploying the Cloud Provider using kubectl apply -f cloudprovider.yaml. 
+When running in a service provided by a Cloud Provider this is not required.
+
+When a service requests a Load Balancer, the provider will allocate one from the 10.10.0.0/26 range defined in the configuration.
+
+```
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+```
 
 Kubernetes Resources
 =========
