@@ -92,13 +92,14 @@ First, let's enable parallel behavior in Surefire using the parallel parameter. 
 
 The possible values are:
 
-methods – runs test methods in separate threads
-classes – runs test classes in separate threads
-classesAndMethods – runs classes and methods in separate threads
-suites – runs suites in parallel
-suitesAndClasses – runs suites and classes in separate threads
-suitesAndMethods – creates separate threads for classes and for methods
-all – runs suites, classes as well as methods in separate threads
+* methods – runs test methods in separate threads
+* classes – runs test classes in separate threads
+* classesAndMethods – runs classes and methods in separate threads
+* suites – runs suites in parallel
+* suitesAndClasses – runs suites and classes in separate threads
+* suitesAndMethods – creates separate threads for classes and for methods
+* all – runs suites, classes as well as methods in separate threads
+
 In our example, we use all:
 
 ```
