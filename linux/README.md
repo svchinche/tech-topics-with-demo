@@ -583,4 +583,47 @@ total 0
 -rw-r--r-- 1 root root 0 Nov 19 17:48 xyz.txt1
 ```
 
+How to change ownership of file created by one NIS user to other user in /tmp directory?(ex. /tmp/t1 is file created by abc nid user and xyz user has to login into the system and need to change its permission
+-----------------------------------------------------------------------
+Conditions are
+--------------
+* he dont need to use sudo or no need to swith to other user and dont change permission of /tmp to 777 )
 
+what is the difference between $* vs $@ in shell ?
+-------------------------------------------------
+"$@" preserves the original number of arguments.
+
+```
+[root@mum00aqm ~]# cat test.sh
+#!/bin/bash
+
+main()
+{
+   echo 'MAIN sees ' $# ' args'
+   echo "$@"
+   echo "$*"
+}
+
+main $*
+main $@
+
+main "$*"
+main "$@"
+
+```
+output
+```
+sh test.sh 1 2 '3 4 5' '6' '7 8 9'
+MAIN sees  9  args
+1 2 3 4 5 6 7 8 9
+1 2 3 4 5 6 7 8 9
+MAIN sees  9  args
+1 2 3 4 5 6 7 8 9
+1 2 3 4 5 6 7 8 9
+MAIN sees  1  args
+1 2 3 4 5 6 7 8 9
+1 2 3 4 5 6 7 8 9
+MAIN sees  5  args
+1 2 3 4 5 6 7 8 9
+1 2 3 4 5 6 7 8 9
+```
