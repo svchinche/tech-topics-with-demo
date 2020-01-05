@@ -5,7 +5,7 @@ Table of contents
 
 <!--ts-->
    * [Unit Files](#unit-files)
-   * [tmpfs vs ramfs and swap](tmpfs-vs-ramfs-and-swap)
+   * [tmpfs vs ramfs and swap](#tmpfs-vs-ramfs-and-swap)
    * [Double vs Sigle square bracket for if condition](#double-vs-single-square-bracket-for-if-condition)
    * [cut](#cut)
    * [xargs](#xargs)
@@ -145,6 +145,39 @@ Swappiness can have a value between 0 and 100. A low value will make the kernel 
 swapping whenever possible while a higher value will make the kernel to use the swap space more aggressively.
 The default swappiness value is 60. You can check the current swappiness value by typing the following command:</br>
 
+Purpose of tmpfs?
+-----------------
+This memory is generally used by Linux to cache recently accessed files so that the next time they are requested then can be fetched from RAM very quickly
+
+what is tmpfs? (initially it was RAM disk - virtual disk)
+-------------
+- temparary file system data is stored on volatile memory rather than physical memory.
+
+why swap is used even if RAM is free ?
+--------------------------
+Inactive memory pages(that are very seldom use)will get swapped into swap memory. 
+Swap space usage becomes an issue only when there is no RAM available -  Since kernel is force to send memory pages to swap and back to RAM.
+
+what is buff/cache ?
+-------------------
+```
+free  -m
+              total        used        free      shared  buff/cache   available
+Mem:          29172       15139         655          47       13377       12817
+Swap:         21999        3870       18129
+```
+
+* buffers - Memory used by kernel buffers (Buffers in /proc/meminfo)
+buffers refers to data that is being written -- that memory cannot be reclaimed until the write is complete.
+
+* cache -Memory used by the page cache and slabs (Cached and SReclaimable in /proc/meminfo)
+refers to data that has been read -- it is kept around in case it needs to be read again, but can be immediately reclaimed since it can always be re-read from disk.
+
+
+Difference of free vs available ?
+----------------------------------
+* free - Free / Unused memory.
+* available - An estimate of the amount of memory that is available for starting new applications, without swapping
 
 Double vs Single square bracket for if condition
 =========================
