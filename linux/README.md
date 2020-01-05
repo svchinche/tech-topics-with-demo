@@ -14,6 +14,7 @@ Table of contents
    * [sed](#sed)
    * [awk](#awk)
    * [How ssl works](#how-ssl-works)
+   * [Selinux](#selinux)
    * [tricky interview quetions](#tricky-interview-quetions)
   
 
@@ -457,10 +458,6 @@ awk options 'selection _criteria {action }' file.txt
 How SSL Works
 =============
 
-How SSL Works
-=============
-
-
 **What is trusted and self signed certificate**
 
 Self Signed Certificate
@@ -492,6 +489,7 @@ echo | openssl s_client  -connect <hostname>:<port no> -"<protocol>" 2>/dev/null
 echo|  openssl s_client  -connect <hostname>:<port no>  -cipher <cipher> 2>/dev/null | grep -i supported
 ```
 
+
 | Command purpose                                                                                                | Command                                                                                                                                                                                                                                                                                                                                                    |
 |----------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Step 1 \- Create private key and a private key store for aforementioned created key \(\.\.identity\.jck file\) | keytool \-genkey \-alias \`hostname \-f` \-keyalg RSA \-keysize 2048 \-sigalg SHA256withRSA \-validity 1095 \-keypass "GkTjn03zfpJ8Weq9" \-storetype jceks \-keystore `hostname \-f`\_identity\.jck \-storepass "GkTjn03zfpJ8Weq9"   \-dname "CN=`hostname \-f`, OU=Oracle Cloud for Industry, O=Oracle Corporation, L=Redwood Shores, S=California, C=US" |
@@ -501,6 +499,29 @@ echo|  openssl s_client  -connect <hostname>:<port no>  -cipher <cipher> 2>/dev/
 | List all public \(trust\) keys in public \(trust\) key store                                                   | keytool \-list \-keystore \`hostname \-f`\_trust\.jck \-storetype jceks \-storepass "GkTjn03zfpJ8Weq9"                                                                                                                                                                                                                                                     |
 
 
+
+
+```
+```
+
+SELinux
+======== 
+Policy core component of selinux (Set of rules)
+* Users - Policy defines users access to roles (users -> roles) 
+* roles - and roles access to domain (roles -> domain)
+* domains - and domain access a file
+
+Commands to manage policies
+-------
+
+* List and manage all selinux modules
+```
+semodule -l
+semanage boolean -l
+getsebool <name of boolean>
+setsebool <name of boolean> true/false
+
+```
 
 
 Tricky interview quetions
