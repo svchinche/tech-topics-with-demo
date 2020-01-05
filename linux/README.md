@@ -588,6 +588,35 @@ How to change ownership of file created by one NIS user to other user in /tmp di
 Conditions are
 --------------
 * he dont need to use sudo or no need to swith to other user and dont change permission of /tmp to 777 )
+Answer: 
+
+tempfs by default permission is 1777
+```linux
+[root@mum00aqm ~]# getfacl /tmp
+getfacl: Removing leading '/' from absolute path names
+# file: tmp
+# owner: root
+# group: root
+# flags: --t
+user::rwx
+group::rwx
+other::rwx
+
+touch /tmp/svchinch
+
+setfacl -m u:anjane:rw /tmp/svchinch
+
+getfacl /tmp/svchinch
+getfacl: Removing leading '/' from absolute path names
+# file: tmp/svchinch
+# owner: svchinch
+# group: dba
+user::rw-
+user:anjane:rw-
+group::r--
+mask::rw-
+other::r--
+```
 
 what is the difference between $* vs $@ in shell ?
 -------------------------------------------------
