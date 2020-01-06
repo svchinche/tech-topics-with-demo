@@ -145,6 +145,10 @@ Swappiness is a Linux kernel property that defines how often the system will use
 Swappiness can have a value between 0 and 100. A low value will make the kernel to try to avoid 
 swapping whenever possible while a higher value will make the kernel to use the swap space more aggressively.
 The default swappiness value is 60. You can check the current swappiness value by typing the following command:</br>
+```
+[root@mum00aqm]# cat /proc/sys/vm/swappiness
+30
+```
 
 Purpose of tmpfs?
 -----------------
