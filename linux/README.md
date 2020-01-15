@@ -624,39 +624,39 @@ other::r--
 
 what is the difference between $* vs $@ in shell ?
 -------------------------------------------------
-"$@" preserves the original number of arguments.
-
+ the values of $@ and $* are same.
+However, the values of "$@" and "$*" are different (note double quotes).
 ```
-[root@mum00aqm ~]# cat test.sh
+$@ expanded as "$1" "$2" "$3" ... "$n"
+$* expanded as "$1IFS$2IFS$3IFS...$n", "$*" is one long string and $IFS act as an separator or token delimiters.
+
+[root@mum00ban ~]# cat data.sh
 #!/bin/bash
+IFS='|'
+echo "--------------------------------"
+echo "--------------------------------"
+echo "${*}"
+echo "--------------------------------"
+echo "${@}"
+echo "--------------------------------"
+echo $*
+echo "--------------------------------"
+echo $@
+echo "--------------------------------"
+echo "--------------------------------"
 
-main()
-{
-   echo 'MAIN sees ' $# ' args'
-   echo "$@"
-   echo "$*"
-}
 
-main $*
-main $@
+sh data.sh 1 2 3 4 5 6 7 8 9 10 12 34 767  Suyog Suraj 12 3483 54893 adsjkdkaj asdkjlfaslfj  qwhjwhkjwkef
+--------------------------------
+--------------------------------
+1|2|3|4|5|6|7|8|9|10|12|34|767|Suyog|Suraj|12|3483|54893|adsjkdkaj|asdkjlfaslfj|qwhjwhkjwkef
+--------------------------------
+1 2 3 4 5 6 7 8 9 10 12 34 767 Suyog Suraj 12 3483 54893 adsjkdkaj asdkjlfaslfj qwhjwhkjwkef
+--------------------------------
+1 2 3 4 5 6 7 8 9 10 12 34 767 Suyog Suraj 12 3483 54893 adsjkdkaj asdkjlfaslfj qwhjwhkjwkef
+--------------------------------
+1 2 3 4 5 6 7 8 9 10 12 34 767 Suyog Suraj 12 3483 54893 adsjkdkaj asdkjlfaslfj qwhjwhkjwkef
+--------------------------------
+--------------------------------
 
-main "$*"
-main "$@"
-
-```
-output
-```
-sh test.sh 1 2 '3 4 5' '6' '7 8 9'
-MAIN sees  9  args
-1 2 3 4 5 6 7 8 9
-1 2 3 4 5 6 7 8 9
-MAIN sees  9  args
-1 2 3 4 5 6 7 8 9
-1 2 3 4 5 6 7 8 9
-MAIN sees  1  args
-1 2 3 4 5 6 7 8 9
-1 2 3 4 5 6 7 8 9
-MAIN sees  5  args
-1 2 3 4 5 6 7 8 9
-1 2 3 4 5 6 7 8 9
 ```
