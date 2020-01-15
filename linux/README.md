@@ -660,3 +660,32 @@ sh data.sh 1 2 3 4 5 6 7 8 9 10 12 34 767  Suyog Suraj 12 3483 54893 adsjkdkaj a
 --------------------------------
 
 ```
+
+How to get filename or directory name in column without using pipe or awk ?
+--------------------------------------------------------------------
+```
+[root@mum00ban ~]# ls -1
+anaconda-ks.cfg
+chef-15.2.26-1.el7.x86_64.rpm
+chef-repo
+chef-repo.zip
+data
+data.sh
+pre-req.sh
+R6
+```
+
+How can we run grep command without standard output?
+------------------------------------------------------
+condition - Dont redirect the logs in dev null 
+----------------------------------------------
+```
+[root@mum00ban ~]# grep -inr "Jan" data
+1:Wed Jan 15 13:43:15 UTC 2020
+2:Wed Jan 15 13:43:35 UTC 2020
+[root@mum00ban ~]# grep -inrq "Jan" data
+
+[root@mum00ban ~]# grep -inrq "Jan" data;echo $?
+0
+
+```
