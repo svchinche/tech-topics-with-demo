@@ -689,3 +689,46 @@ condition - Dont redirect the logs in dev null
 0
 
 ```
+
+Special variables in shell
+--------------------------
+```shell
+$1, $2, $3, ... are the positional parameters.
+"$@" is an array-like construct of all positional parameters, {$1, $2, $3 ...}.
+"$*" is the IFS expansion of all positional parameters, $1 $2 $3 ....
+$# is the number of positional parameters.
+$- current options set for the shell.
+$$ pid of the current shell (not subshell).
+$_ most recent parameter (or the abs path of the command to start the current shell immediately after startup).
+$IFS is the (input) field separator.
+$? is the most recent foreground pipeline exit status.
+$! is the PID of the most recent background command.
+$0 is the name of the shell or shell script.
+```
+
+What is Subshell
+-----------------
+Whenever you run a shell script, it creates a new process called subshell and your script will get executed using a subshell.</br>
+A Subshell can be used to do parallel processing.</br>
+If you start another shell on top of your current shell, it can be referred to as a subshell. Type the following command to see subshell value:</br>
+
+
+What is sh and bash
+-------------------
+Shell" is a program, which facilitates the interaction between the user and operating system (kernel) </br>
+Bash (bash) is one of many available (yet the most commonly used) Unix shells.  </br>
+Bash stands for "Bourne Again SHell", and is a replacement/improvement of the original Bourne shell (sh). </br>
+
+
+Explain about "s" permission bit in a file?
+----------------------------------------------
+
+"s" bit is called "set user id" (SUID) bit.</br>
+"s" bit on a file causes the process to have the privileges of the owner of the file during the instance of the program.</br>
+For example, executing "passwd" command to change current password causes the user to writes its new password to shadow file even though it has "root" as its owner.
+
+The dot command allows you to modify current shell variables.
+-----------------------------------------------------------
+
+exec command to avoid subshell
+------------------------------
