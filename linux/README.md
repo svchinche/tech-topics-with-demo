@@ -675,10 +675,9 @@ pre-req.sh
 R6
 ```
 
-How can we run grep command without standard output?
+How can we run grep command without standard output? (condition - Dont redirect the logs in dev null )
 ------------------------------------------------------
-condition - Dont redirect the logs in dev null 
-----------------------------------------------
+
 ```
 [root@mum00ban ~]# grep -inr "Jan" data
 1:Wed Jan 15 13:43:15 UTC 2020
