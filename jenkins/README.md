@@ -20,6 +20,7 @@ Table of contents
    * [Roles and Responsibilities of Cloud Engg](#roles-and-responsibilities-of-cloud-engg)
    * [Best Practices for Devops](#best-practices-for-devops)
    * [Best practices for Jenkins](#best-practices-for-jenkins)
+   * [Issues](#issues)
 <!--te-->
 
 Devops
@@ -333,3 +334,25 @@ Best Practices for Devops
 
 Best practices for Jenkins
 ==========================
+
+Issues
+=====
+
+redirection shell operator put jenkins in hang state 
+----------------------------------------------------
+
+* Problem Description: '>' and 'tee' operator is not able to write data in file when we invoke shell commnd from jenkins pipeline, job goes into hang state
+
+Solution: 
+``` tr -cd '[:alnum:]' < /dev/urandom | fold -w32 | head -n1 > ~/.ansible_keys/.vault_ccoms.dev  ```
+This was the command that we were executing from jenkins, This command works properly on linux shell but it will not work on jenkins shell.</br>
+Reason behind this is jenkins wait till first command get executed in case of pipeline. </br>
+For proof run below command on linux shell
+```
+[root@mum00aqm ~]# echo $PWD | sleep 5 | hostname -f
+mum00aqm
+```
+without waiting for 5 sec it will print hostname information but in case of jenkins shell it will wait for 5 sec first and then it will print the hostname.
+
+
+
