@@ -6,7 +6,7 @@ Table of contents
 =================
 
 <!--ts-->
-   * [Devops](#devops)
+   * [Agile Methodoly vs Devops](#agile-methodology-vs-devops)
    * [How to start working in devops](#how-to-start-working-in-devops)
    * [Jenkins](#jenkins)
       * [Declarative vs scripted](#declarative-vs-scripted)
@@ -23,8 +23,33 @@ Table of contents
    * [Issues](#issues)
 <!--te-->
 
-Devops
+Agile Methodology vs Devops
 ==============
+
+Agile Methodology
+----------------
+DevOps is a practice of bringing development and operations teams together whereas Agile is an iterative approach that focuses on collaboration, customer feedback and small rapid releases. </br>
+DevOps focuses on constant testing and delivery while the Agile process focuses on constant changes. </br>
+
+Scrum Components
+---------------
+
+Epic
+----
+Epics are usually defined during the initial product roadmap and decomposed into stories in the product backlog as more is learned and is usually written in a User Story format. 
+Usually provide release information in epic. example
+Product_<release>_<development/QA>_items
+Product_CCOMS_development_items
+
+User Stories
+------------
+User stories should deliver a vertical slice of functionality to the customer that is valuable and complete by the end of an iteration
+Prod
+
+Tasks
+-----
+We divide user stories into small task and start working on it.
+
 Devops is a collection architecture, tools that increases organization ability to deliver applications and services at rapid pace
 
 Devops lifecycle
