@@ -15,6 +15,7 @@ Table of contents
    * [awk](#awk)
    * [How ssl works](#how-ssl-works)
    * [Selinux](#selinux)
+   * [Date and NTP](#date-and-ntp)
    * [tricky interview quetions](#tricky-interview-quetions)
   
 
@@ -527,6 +528,36 @@ setsebool <name of boolean> true/false
 
 ```
 
+Date and NTP
+============
+
+Date
+----
+```
+[root@mum00cuc ~]# date +%Y
+2020
+[root@mum00cuc ~]# date +%Y-%d
+2020-18
+[root@mum00cuc ~]# date +%Y-%d-%m
+2020-18-01
+```
+
+NTP
+----
+Just start ntpdate service, it will tell you when server is synched with NTP server
+```
+[root@mum00cuc ~]# service ntpdate status
+Redirecting to /bin/systemctl status  ntpdate.service
+● ntpdate.service - Set time via NTP
+   Loaded: loaded (/usr/lib/systemd/system/ntpdate.service; disabled; vendor preset: disabled)
+   Active: active (exited) since Sat 2020-01-18 08:29:08 EST; 1h 8min ago
+  Process: 20771 ExecStart=/usr/libexec/ntpdate-wrapper (code=exited, status=0/SUCCESS)
+ Main PID: 20771 (code=exited, status=0/SUCCESS)
+
+Jan 17 13:51:32 mum00cuc.in.oracle.com systemd[1]: Starting Set time via NTP...
+Jan 18 08:29:08 mum00cuc.in.oracle.com systemd[1]: Started Set time via NTP.
+You have new mail in /var/spool/mail/root
+```
 
 Tricky interview quetions
 =========================
