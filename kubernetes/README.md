@@ -470,3 +470,32 @@ IP:
 ```linux
 kubectl get pods -n ccoms | grep Evicted | awk '{print $1}' | xargs kubectl delete -n ccoms pod
 ```
+
+network failed to set bridge addr ailedCreatePodSandBox "cni0" already has an IP address different from
+------------------------------------------------------------------------------------------------------
+* Reset cluster and run below commands
+```
+kubeadm reset -f
+systemctl stop kubelet
+systemctl stop docker
+rm -rf /var/lib/cni/
+rm -rf /var/lib/kubelet/*
+rm -rf /etc/cni/
+ifconfig cni0 down
+ifconfig flannel.1 down
+ifconfig docker0 down    
+ip link delete cni0
+brctl delbr cni0 
+umount $(df -HT | grep '/var/lib/kubelet/pods' | awk '{print $7}')
+rm -rf /var/lib/cni/flannel/* && rm -rf /var/lib/cni/networks/cbr0/* && ip link delete cni0  
+rm -rf /var/lib/cni/networks/cni0/*
+
+systemctl enable kubelet
+systemctl start kubelet
+systemctl enable docker
+systemctl start docker
+
+kubeadm init --pod-network-cidr=10.244.0.0/16
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+```
