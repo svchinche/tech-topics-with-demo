@@ -496,6 +496,9 @@ yum install -y snapd
 systemctl enable --now snapd.socket
 ln -s /var/lib/snapd/snap /snap
 snap install helm3
+
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
 ```
 Issues
 ======
