@@ -19,6 +19,7 @@ Table of contents
    * [ReplicationController vs ReplicaSet Vs Deployment](#replicationcontroller-vs-replicaSet-vs-deployment)
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
    * [CoreDNS](#cordens)
+   * [Preparing K8S Cluster](#Preparing-k8s-cluster)
    * [Issues](#issues)
 <!--te-->
 
@@ -438,6 +439,54 @@ Note:: Here, we are using replace since we dont know how this ConfigMap is creat
 
 - Adding Custom core-dns file
 
+Preparing K8S Cluster
+=====================
+
+Install k8s
+------------
+
+```
+## Add yum repo
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+## install package
+yum install -y kubelet kubeadm kubectl
+
+## disable ip6 tables
+cat  < /etc/sysctl.d/master_node_name
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+
+## Disable SE Linux
+sudo setenforce 0
+sudo sed -i ‘s/^SELINUX=enforcing$/SELINUX=permissive/’ /etc/selinux/config
+
+## Disable swap
+sudo sed -i '/swap/d' /etc/fstab
+sudo swapoff -a
+
+```
+
+
+Installing helm3
+---------------
+
+```
+yum install -y epel-release snapd
+systemctl enable --now snapd.socket
+ln -s /var/lib/snapd/snap /snap
+snap install helm3
+```
 Issues
 ======
 
