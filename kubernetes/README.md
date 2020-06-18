@@ -458,7 +458,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 EOF
 
 ## install package
-yum install -y kubelet kubeadm kubectl
+yum install -y kubelet kubeadm kubectl docker
 
 ## disable ip6 tables
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
