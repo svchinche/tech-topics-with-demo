@@ -491,7 +491,8 @@ Installing helm3
 ---------------
 
 ```
-yum install -y epel-release snapd
+yum install -y epel-release 
+yum install -y snapd
 systemctl enable --now snapd.socket
 ln -s /var/lib/snapd/snap /snap
 snap install helm3
