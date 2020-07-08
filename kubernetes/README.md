@@ -469,12 +469,12 @@ sudo sysctl --system
 
 
 ## Disable SE Linux
-sudo setenforce 0
-sudo sed -i ‘s/^SELINUX=enforcing$/SELINUX=permissive/’ /etc/selinux/config
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 ## Disable swap
-sudo sed -i '/swap/d' /etc/fstab
-sudo swapoff -a
+sed -i '/swap/d' /etc/fstab
+swapoff -a
 
 ## Start services
 systemctl enable kubelet
@@ -499,6 +499,23 @@ snap install helm3
 
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
+```
+Adding new node in existing cluster
+----------------------------------
+Run below command on master node
+```
+kubeadm token create --print-join-command
+W0708 09:01:17.460384   24912 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+kubeadm join 10.135.35.77:6443 --token j9zo99.ajyt3v76l06a2mvc     --discovery-token-ca-cert-hash sha256:7daa5ae3e86cca5c8706879eba7940a00abeb547975d33417f2ab5141cf4a4c3
+```
+
+Adding new node in existing cluster
+----------------------------------
+Run below command on master node
+```
+kubeadm token create --print-join-command
+W0708 09:01:17.460384   24912 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+kubeadm join 10.135.35.77:6443 --token j9zo99.ajyt3v76l06a2mvc     --discovery-token-ca-cert-hash sha256:7daa5ae3e86cca5c8706879eba7940a00abeb547975d33417f2ab5141cf4a4c3
 ```
 Issues
 ======
