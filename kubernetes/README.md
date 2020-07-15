@@ -548,10 +548,13 @@ issue - Did not work for me, thats why i tried ha-proxy controller, it worked
 
 HA Proxy Deployment
 -----------------
+
+```shell
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
 helm search repo haproxy
 helm install mycontroller haproxytech/kubernetes-ingress
+```
 
 For testing purpose deploy ingress based application and try to access that app via ingress service
 
