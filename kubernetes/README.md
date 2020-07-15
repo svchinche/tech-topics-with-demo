@@ -20,6 +20,7 @@ Table of contents
    * [Damonset vs Statefulset vs Deployment](#daemonset-vs-statefulset-vs-deployment)
    * [CoreDNS](#cordens)
    * [Preparing K8S Cluster](#Preparing-k8s-cluster)
+   * [Ingress](#ingress)
    * [Issues](#issues)
 <!--te-->
 
@@ -507,6 +508,119 @@ Run below command on master node
 kubeadm token create --print-join-command
 W0708 09:01:17.460384   24912 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
 kubeadm join 10.135.35.77:6443 --token j9zo99.ajyt3v76l06a2mvc     --discovery-token-ca-cert-hash sha256:7daa5ae3e86cca5c8706879eba7940a00abeb547975d33417f2ab5141cf4a4c3
+```
+
+Ingress 
+========
+
+Plain kubernetes does not contains ingress controller. Ingress resource will only work, if k8s cluster has ingress controller installed.
+Following are the ingress controller.
+- F5
+- nginx
+- ha-proxy
+- istio
+- traefic
+- skipper
+- kong
+- glue
+- citrix
+- contour
+- AKS
+
+NGINX Deployment
+----------------
+we can configure controller nginx-controller using helm
+
+```
+[root@master-node ingress_testing]# cat ~/ingress-values-np.yaml
+controller:
+  service:
+    type: NodePort
+
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
+helm install nginx-ingress nginx-stable/nginx-ingress -f ~/ingress-values-np.yaml
+```
+
+
+
+issue - Did not work for me, thats why i tried ha-proxy controller, it worked
+
+HA Proxy Deployment
+-----------------
+helm repo add haproxytech https://haproxytech.github.io/helm-charts
+helm repo update
+helm search repo haproxy
+helm install mycontroller haproxytech/kubernetes-ingress
+
+For testing purpose deploy ingress based application and try to access that app via ingress service
+
+```yaml  ingress-test.yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: employee-app
+  labels:
+    app: employee
+spec:
+  containers:
+    - name: employee-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=employee"
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: department-app
+  labels:
+    app: department
+spec:
+  containers:
+    - name: department-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=department"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: employee-service
+spec:
+  selector:
+    app: employee
+  ports:
+    - port: 5678 # Default port for image
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: department-service
+spec:
+  selector:
+    app: department
+  ports:
+    - port: 5678 # Default port for image
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /employee
+          backend:
+            serviceName: employee-service
+            servicePort: 5678
+        - path: /department
+          backend:
+            serviceName: department-service
+            servicePort: 5678
+
 ```
 
 Issues
