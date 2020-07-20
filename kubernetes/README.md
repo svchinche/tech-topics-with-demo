@@ -21,6 +21,7 @@ Table of contents
    * [CoreDNS](#cordens)
    * [Preparing K8S Cluster](#Preparing-k8s-cluster)
    * [Ingress](#ingress)
+   * [RBAC](#rbac)
    * [Issues](#issues)
 <!--te-->
 
@@ -624,6 +625,134 @@ spec:
             serviceName: department-service
             servicePort: 5678
 
+```
+
+RBAC
+====
+
+# Create namespace
+export CA_LOCATION=/etc/kubernetes/pki/ </br>
+cd $CA_LOCATION </br>
+kubectl create namespace ccoms </br>
+
+# Create the user credentials
+
+- Create a private key for your user.
+openssl genrsa -out employee.key 2048 </br>
+```
+[root@clm-pun-ub7040 pki]# openssl genrsa -out employee.key 2048
+
+Generating RSA private key, 2048 bit long modulus
+...........+++
+.............................................+++
+e is 65537 (0x10001)
+[root@clm-pun-ub7040 pki]# cat employee.key
+-----BEGIN RSA PRIVATE KEY-----
+H/VpNpl+h9pZ7ZSPi6HUxlEWpJqpUZJBz5xFxxj6C15pIcgoch6qZltMSDtAuLOz
+LQaEFPTdBiXH2rInXkhvJMhiSv6YmG+482yOny9FYPGH9vtXoHwglh7CWjE7KW3k
+gDKSi2XmeGsL6Nj/4hSHuj0RRnmdFtQgAweDtaXuHFIUu7C1AQHisnjncQ/c9TRf
+pjwQ6d4F7JxeOxDlE3bkP7ODWm1+hxcTs4Dp1QIDAQABAoIBABlp36+KSrhJX32K
+-----END RSA PRIVATE KEY-----
+```
+
+- Create a certificate sign request employee.csr using the private key you just created (employee.key in this example). 
+
+Make sure you specify your username and group in the -subj section (CN is for the username and O for the group). As previously mentioned, we will use employee as the name and bitnami as the group: </br>
+openssl req -new -key employee.key -out employee.csr -subj "/CN=employee/O=ccoms" </br>
+
+```
+[root@clm-pun-ub7040 pki]# openssl req -new -key employee.key -out employee.csr -subj "/CN=employee/O=ccoms"
+[root@clm-pun-ub7040 pki]# cat employee.csr
+-----BEGIN CERTIFICATE REQUEST-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxW5fNVkLH845vvzG2WV4
+Qc08xQxqYLI7lCgwoL3seBzRvsAb/bGc+qqGqIZo1Lg09B83oFbzDANVxouMYn8v
+oOZ6zsOSvLkCfXGtQ+PzrvhN6KHKH/VpNpl+h9pZ7ZSPi6HUxlEWpJqpUZJBz5xF
+xxj6C15pIcgoch6qZltMSDtAuLOzLQaEFPTdBiXH2rInXkhvJMhiSv6YmG+482yO
+-----END CERTIFICATE REQUEST-----
+```
+
+- Generate the final certificate employee.crt by approving the certificate sign request, employee.csr
+
+openssl x509 -req -in employee.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key \ </br>
+-CAcreateserial -out employee.crt -days 1095 </br>
+```
+[root@clm-pun-ub7040 pki]# openssl x509 -req -in employee.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key \
+> -CAcreateserial -out employee.crt -days 1095
+Signature ok
+subject=/CN=employee/O=ccoms
+Getting CA Private Key
+```
+
+- Add a new context with the new credentials for your Kubernetes cluster
+
+kubectl config set-credentials employee --client-certificate=$CA_LOCATION/employee.crt \ </br>
+--client-key=$CA_LOCATION/employee.key </br>
+
+```
+[root@clm-pun-ub7040 pki]# kubectl config set-credentials employee --client-certificate=$CA_LOCATION/employee.crt \
+> --client-key=$CA_LOCATION/employee.key
+User "employee" set.
+
+
+kubectl config set-context employee-context --cluster=kubernetes --namespace=ccoms --user=employee
+[root@clm-pun-ub7040 pki]# kubectl config set-context employee-context --cluster=kubernetes --namespace=ccoms --user=employee
+Context "employee-context" created.
+```
+
+- You will see the error, since this user dont have any permissions
+kubectl --context=employee-context get pods
+```
+[root@clm-pun-ub7040 pki]# kubectl --context=employee-context get pods
+Error from server (Forbidden): pods is forbidden: User "employee" cannot list resource "pods" in API group "" in the namespace "ccoms"
+```
+
+# Create the role for managing deployments
+- Create role
+```
+cat > ~/employee_role.yaml << EOD
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: ccoms
+  name: emp-manager
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["deployments", "replicasets", "pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] # You can also use ["*"]
+EOD
+  
+kubectl create -f ~/employee_role.yaml
+```
+- Bind this role with employee user
+
+```
+cat > ~/employee_rolebinding.yaml << EOD
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: emp-manager-binding
+  namespace: ccoms
+subjects:
+- kind: User
+  name: employee
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: emp-manager
+  apiGroup: ""
+EOD
+
+kubectl create -f ~/employee_rolebinding.yaml
+```
+
+- Test RBAC rule
+kubectl --context=employee-context run --image ccoms/employee </br>
+kubectl --context=employee-context get pods </br>
+
+Below command will be failed since user dont have permission on other namespace
+```linux
+[root@clm-pun-ub7040 pki]# kubectl --context=employee-context get pods --namespace=default
+Error from server (Forbidden): pods is forbidden: User "employee" cannot list resource "pods" in API group "" in the namespace "default"
 ```
 
 Issues
