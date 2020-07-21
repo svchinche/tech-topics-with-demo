@@ -640,13 +640,13 @@ kubectl create namespace ccoms </br>
 - Create a private key for your user.
 openssl genrsa -out employee.key 2048 </br>
 ```
-[root@clm-pun-ub7040 pki]# openssl genrsa -out employee.key 2048
+[root@master-node pki]# openssl genrsa -out employee.key 2048
 
 Generating RSA private key, 2048 bit long modulus
 ...........+++
 .............................................+++
 e is 65537 (0x10001)
-[root@clm-pun-ub7040 pki]# cat employee.key
+[root@master-node pki]# cat employee.key
 -----BEGIN RSA PRIVATE KEY-----
 H/VpNpl+h9pZ7ZSPi6HUxlEWpJqpUZJBz5xFxxj6C15pIcgoch6qZltMSDtAuLOz
 LQaEFPTdBiXH2rInXkhvJMhiSv6YmG+482yOny9FYPGH9vtXoHwglh7CWjE7KW3k
@@ -661,8 +661,8 @@ Make sure you specify your username and group in the -subj section (CN is for th
 openssl req -new -key employee.key -out employee.csr -subj "/CN=employee/O=ccoms" </br>
 
 ```
-[root@clm-pun-ub7040 pki]# openssl req -new -key employee.key -out employee.csr -subj "/CN=employee/O=ccoms"
-[root@clm-pun-ub7040 pki]# cat employee.csr
+[root@master-node pki]# openssl req -new -key employee.key -out employee.csr -subj "/CN=employee/O=ccoms"
+[root@master-node pki]# cat employee.csr
 -----BEGIN CERTIFICATE REQUEST-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxW5fNVkLH845vvzG2WV4
 Qc08xQxqYLI7lCgwoL3seBzRvsAb/bGc+qqGqIZo1Lg09B83oFbzDANVxouMYn8v
@@ -676,7 +676,7 @@ xxj6C15pIcgoch6qZltMSDtAuLOzLQaEFPTdBiXH2rInXkhvJMhiSv6YmG+482yO
 openssl x509 -req -in employee.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key \ </br>
 -CAcreateserial -out employee.crt -days 1095 </br>
 ```
-[root@clm-pun-ub7040 pki]# openssl x509 -req -in employee.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key \
+[root@master-node pki]# openssl x509 -req -in employee.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key \
 > -CAcreateserial -out employee.crt -days 1095
 Signature ok
 subject=/CN=employee/O=ccoms
@@ -689,20 +689,20 @@ kubectl config set-credentials employee --client-certificate=$CA_LOCATION/employ
 --client-key=$CA_LOCATION/employee.key </br>
 
 ```
-[root@clm-pun-ub7040 pki]# kubectl config set-credentials employee --client-certificate=$CA_LOCATION/employee.crt \
+[root@master-node pki]# kubectl config set-credentials employee --client-certificate=$CA_LOCATION/employee.crt \
 > --client-key=$CA_LOCATION/employee.key
 User "employee" set.
 
 
 kubectl config set-context employee-context --cluster=kubernetes --namespace=ccoms --user=employee
-[root@clm-pun-ub7040 pki]# kubectl config set-context employee-context --cluster=kubernetes --namespace=ccoms --user=employee
+[root@master-node pki]# kubectl config set-context employee-context --cluster=kubernetes --namespace=ccoms --user=employee
 Context "employee-context" created.
 ```
 
 - You will see the error, since this user dont have any permissions
 kubectl --context=employee-context get pods
 ```
-[root@clm-pun-ub7040 pki]# kubectl --context=employee-context get pods
+[root@master-node pki]# kubectl --context=employee-context get pods
 Error from server (Forbidden): pods is forbidden: User "employee" cannot list resource "pods" in API group "" in the namespace "ccoms"
 ```
 
@@ -751,7 +751,7 @@ kubectl --context=employee-context get pods </br>
 
 Below command will be failed since user dont have permission on other namespace
 ```linux
-[root@clm-pun-ub7040 pki]# kubectl --context=employee-context get pods --namespace=default
+[root@master-node pki]# kubectl --context=employee-context get pods --namespace=default
 Error from server (Forbidden): pods is forbidden: User "employee" cannot list resource "pods" in API group "" in the namespace "default"
 ```
 
