@@ -818,3 +818,48 @@ kubeadm init --pod-network-cidr=10.244.0.0/16
 
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
+
+* SYMPTOM
+
+Upon manual restart of the VMS (via vcenter) Pod Rollout became stuck in the ContainerCreating status.
+--------------------
+
+* Possibility 1: kubectl describe <pod_name> 
+
+* Error will look like this:
+
+```
+Warning  FailedCreatePodSandBox  1m (x12 over 1m)  kubelet, 2461c956-8ed9-4b6a-95ac-6062d5dc3bd8  Failed create pod sandbox: rpc error: code = Unknown desc = NetworkPlugin cni failed to set up pod "nginx-c58f88dd6-hqszg_default" network: "cni0" already has an IP address different from 10.200.56.1/24
+Possibility 2: When I run ifconfig on a worker node I can see that flannel and cni are on different subnets ​
+worker/xxxx:/var/lib/cni/networks# ifconfig
+cni0      Link encap:Ethernet  HWaddr 4e:d5:14:c4:c8:f3
+          inet addr:10.200.29.1  Bcast:10.200.29.255  Mask:255.255.255.0
+
+flannel.1 Link encap:Ethernet  HWaddr 2e:e3:38:5b:d5:69
+          inet addr:10.200.78.0  Bcast:0.0.0.0  Mask:255.255.255.255
+ ```
+ 
+
+* CAUSE
+Flannel assigns a subnet lease to the workers in the cluster, which expires after 24 hours (this is not configurable in flannel). </br>
+Upon restart of the VMS the flannel.1 and cni0 /24 subnet no longer match, which causes this issue. </br>
+
+
+Flannel assigns a subnet lease to the workers in the cluster, which expires after 24 hours (this is not configurable in flannel). </br>
+Upon restart of the VMS the flannel.1 and cni0 /24 subnet no longer match, which causes this issue. </br>
+
+* RESOLUTION
+Resolution 1:
+bosh ssh -d <deployment_name> worker -c "sudo /var/vcap/bosh/bin/monit stop flanneld" </br>
+bosh ssh -d <deployment_name> worker -c "sudo rm /var/vcap/store/docker/docker/network/files/local-kv.db" </br>
+bosh ssh -d <deployment_name> worker -c "sudo /var/vcap/bosh/bin/monit restart all" </br>
+
+* Resolution 2:
+Note: Only to be used if resolution 1 does not work.
+bosh ssh -d <deployment_name> worker -c "sudo /var/vcap/bosh/bin/monit stop flanneld" </br>
+bosh ssh -d <> worker -c "ifconfig | grep -A 1 flannel" </br>
+On a master node get access to etcd using the following KB  </br>
+On a master node run `etcdctlv2 ls /coreos.com/network/subnets/` </br>
+Remove all the worker subnet leases from etcd by running `etcdctlv2 rm /coreos.com/network/subnets/<worker_subnet>;` </br>
+for each of the worker subnets from point 2 above. </br>
+bosh ssh -d <deployment_name> worker -c "sudo /var/vcap/bosh/bin/monit restart flanneld" </br>
