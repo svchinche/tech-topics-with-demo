@@ -13,6 +13,7 @@ Table of contents
    * [tr](#tr)
    * [sed](#sed)
    * [awk](#awk)
+   * [getops](#getops)
    * [How ssl works](#how-ssl-works)
    * [Selinux](#selinux)
    * [Date and NTP](#date-and-ntp)
@@ -460,6 +461,22 @@ awk options 'selection _criteria {action }' file.txt
 [root@mum00aqm ~]# echo "Do the sum of 4 and 5" | awk '{print $5 $NF}'
 45
 ```
+
+Getops
+=======
+```
+while getopts 'srd:f:' c
+do
+  case $c in
+    s) ACTION=SAVE ;;
+    r) ACTION=RESTORE ;;
+    d) DB_DUMP=$OPTARG ;;
+    f) TARBALL=$OPTARG ;;
+  esac
+done
+```
+Similarly, if you don't pass at least one of -d and -f, then nothing will happen at all. </br>
+
 How SSL Works
 =============
 
