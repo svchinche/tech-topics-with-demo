@@ -554,12 +554,17 @@ HA Proxy Deployment
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
 helm search repo haproxy
-helm install mycontroller haproxytech/kubernetes-ingress
+external_ip=$(hostname -I | awk '{print $1}') && echo $external_ip
+helm upgrade --install mycontroller haproxytech/kubernetes-ingress --set controller.service.externalIPs={$external_ip}
 ```
 
 For testing purpose deploy ingress based application and try to access that app via ingress service
 
 ```yaml  ingress-test.yaml
+
+kubectl create ns ingress-demo
+
+cat >  ingress-demo.yaml <<EOF
 kind: Pod
 apiVersion: v1
 metadata:
@@ -624,6 +629,11 @@ spec:
           backend:
             serviceName: department-service
             servicePort: 5678
+EOF
+
+kubectl apply -f ingress-demo.yaml -n ingress-demo
+sleep 10
+curl http://$external_ip/employee
 
 ```
 
