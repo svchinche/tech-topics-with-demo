@@ -555,7 +555,7 @@ helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
 helm search repo haproxy
 external_ip=$(hostname -I | awk '{print $1}') && echo $external_ip
-helm upgrade --install mycontroller haproxytech/kubernetes-ingress --set controller.service.externalIPs={$external_ip}
+helm upgrade --install haproxy-ingress-controller haproxytech/kubernetes-ingress --set controller.service.externalIPs={$external_ip}
 ```
 
 For testing purpose deploy ingress based application and try to access that app via ingress service
