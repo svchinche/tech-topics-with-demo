@@ -194,6 +194,8 @@ Node (worker) components
 
 * kube-proxy </br>
   a proxy service that runs on each worker node to deal with individual host subnetting and expose services to the external world. It performs request forwarding to the correct pods/containers across the various isolated networks in a cluster.
+Note: If you are exposing service via external ip and that ip address is not part of kubernetes cluster then kube-proxy service will not able to forward port on that host since that host/ip is not authorize.  
+  
 
 * kubectl </br>
   kubectl command is a line tool that interacts with kube-apiserver and send commands to the master node. Each command is converted into an API call.
