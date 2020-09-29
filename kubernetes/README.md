@@ -450,7 +450,7 @@ Install k8s
 ------------
 
 ```
-## Add yum repo
+## Add yum repo on each node(Master and Worker) to install k8s packages.
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -461,10 +461,10 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
 
-## install package
+## install package on each node
 yum install -y kubelet kubeadm kubectl docker
 
-## disable ip6 tables
+## disable ip6 tables on each node
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
@@ -472,22 +472,22 @@ EOF
 sudo sysctl --system
 
 
-## Disable SE Linux
+## Disable SE Linux on each node
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
-## Disable swap
+## Disable swap each node
 sed -i '/swap/d' /etc/fstab
 swapoff -a
 
-## Start services
+## Start services on each node
 systemctl enable kubelet
 systemctl start kubelet
 systemctl enable docker
 systemctl start docker
 
 ## Always use cidr to work flannel plugin properly
-## run this command on management node only
+## run this command on management/master node only
 kubeadm init --pod-network-cidr=10.244.0.0/16
 
 ```
