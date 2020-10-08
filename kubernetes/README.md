@@ -627,8 +627,8 @@ You will need to add entry into /etc/nginx/nginx.conf file . </br>
 flow will be like below. 
 ==========================
 
-1) Resource request resource on lb eg. lbhost/resource </br>
-2) LB should have entry to point to ingress controller. eg. ip address entry should be added into nginx conf</br>
+1) User request for resource on lb eg. lbhost/resource </br>
+2) LB should have entry to point to ingress controller. eg. ip address of ingress controller ip information should be added into nginx conf</br>
 3) Ingress controller should be exposed on proper external IP.</br>
 ```
 kubectl get svc -n default nginx-controller-nginx-ingress
