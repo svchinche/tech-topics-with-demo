@@ -535,37 +535,16 @@ Following are the ingress controller.
 
 NGINX Deployment
 ----------------
-we can configure controller nginx-controller using helm
+We can configure controller nginx-controller using helm
 
 ```
-[root@master-node ingress_testing]# cat ~/ingress-values-np.yaml
-controller:
-  service:
-    type: NodePort
-
 helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo update
-helm install nginx-ingress nginx-stable/nginx-ingress -f ~/ingress-values-np.yaml
-```
-
-
-
-issue - Did not work for me, thats why i tried ha-proxy controller, it worked
-
-HA Proxy Deployment
------------------
-
-```shell
-helm repo add haproxytech https://haproxytech.github.io/helm-charts
-helm repo update
-helm search repo haproxy
 external_ip=$(hostname -I | awk '{print $1}') && echo $external_ip
-helm upgrade --install haproxy-ingress-controller haproxytech/kubernetes-ingress --set controller.service.externalIPs={$external_ip}
-```
 
-For testing purpose deploy ingress based application and try to access that app via ingress service
+helm install nginx-controller nginx-stable/nginx-ingress --set controller.service.externalIPs={$external_ip} --set controller.service.type=NodePort -n default
+host_name=$(hostname -f)
 
-```yaml  ingress-test.yaml
 
 kubectl create ns ingress-demo
 
@@ -624,7 +603,8 @@ metadata:
     ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
+  - host: ${host_name} 
+    http:
       paths:
         - path: /employee
           backend:
@@ -638,8 +618,135 @@ EOF
 
 kubectl apply -f ingress-demo.yaml -n ingress-demo
 sleep 10
-curl http://$external_ip/employee
+curl http://$host_name/employee
+```
 
+Note: If you want to create nginx as load balancer outside kubernetes cluster(standalone deployment) which you want it to be treated as a load balancer.
+You will need to add entry into /etc/nginx/nginx.conf file . </br>
+
+flow will be like below. 
+==========================
+
+1) Resource request resource on lb eg. lbhost/resource </br>
+2) LB should have entry to point to ingress controller. eg. ip address entry should be added into nginx conf</br>
+3) Ingress controller should be exposed on proper external IP.</br>
+```
+kubectl get svc -n default nginx-controller-nginx-ingress
+NAME                             TYPE       CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+nginx-controller-nginx-ingress   NodePort   10.110.245.48   10.135.71.145   80:31197/TCP,443:31982/TCP   12m
+```
+4) Configure ingress rule.</br>
+```
+[root@k8s-master ~]# kubectl get ing -n ingress-demo
+NAME              HOSTS                    ADDRESS   PORTS   AGE
+example-ingress   lbhost             80      12m
+```
+Note: This ingress rule indicate that if someone request for resource from lbhost, will be processed by the service path.
+```
+      http:
+        paths:
+        - backend:
+            serviceName: employee-service
+            servicePort: 5678
+          path: /employee
+        - backend:
+            serviceName: department-service
+            servicePort: 5678
+          path: /department
+```
+
+
+HA Proxy Deployment
+-----------------
+
+```shell
+helm repo add haproxytech https://haproxytech.github.io/helm-charts
+helm repo update
+helm search repo haproxy
+external_ip=$(hostname -I | awk '{print $1}') && echo $external_ip
+helm upgrade --install haproxy-ingress-controller haproxytech/kubernetes-ingress --set controller.service.externalIPs={$external_ip}
+```
+
+For testing purpose deploy ingress based application and try to access that app via ingress service
+
+```yaml  ingress-test.yaml
+
+host_name=$(hostname -f)
+
+
+kubectl create ns ingress-demo
+
+cat >  ingress-demo.yaml <<EOF
+kind: Pod
+apiVersion: v1
+metadata:
+  name: employee-app
+  labels:
+    app: employee
+spec:
+  containers:
+    - name: employee-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=employee"
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: department-app
+  labels:
+    app: department
+spec:
+  containers:
+    - name: department-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=department"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: employee-service
+spec:
+  selector:
+    app: employee
+  ports:
+    - port: 5678 # Default port for image
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: department-service
+spec:
+  selector:
+    app: department
+  ports:
+    - port: 5678 # Default port for image
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: ${host_name} 
+    http:
+      paths:
+        - path: /employee
+          backend:
+            serviceName: employee-service
+            servicePort: 5678
+        - path: /department
+          backend:
+            serviceName: department-service
+            servicePort: 5678
+EOF
+
+kubectl apply -f ingress-demo.yaml -n ingress-demo
+sleep 10
+curl http://$host_name/employee
 ```
 
 RBAC
