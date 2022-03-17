@@ -709,6 +709,13 @@ sh data.sh 1 2 3 4 5 6 7 8 9 10 12 34 767  Suyog Suraj 12 3483 54893 adsjkdkaj a
 
 ```
 
+How to find filename starting with suyog and ending with suyog and between we can have alphanumeric with lowercaase
+----------------------------------------------------------------------------
+
+```
+ find . -type f -regex "\.\/suyog.[a-z1-9]*suyog"
+```
+
 How to get filename or directory name in column without using pipe or awk ?
 --------------------------------------------------------------------
 ```
