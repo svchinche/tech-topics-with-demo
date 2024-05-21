@@ -38,3 +38,14 @@ run "check_account_id" {
     error_message = "account id does not match"
   }
 }
+
+run "check_bucket_arn" {
+  providers = {
+    aws = aws.mock_aws
+  }
+  command = apply
+  assert {
+    condition     = output.bucket_arn == "arn:aws:s3::223456789908:test-bucket"
+    error_message = "bucket arn does not match"
+  }
+}

@@ -2,6 +2,9 @@ provider "aws" {
     region = "eu-central-1"
 }
 
+data "aws_caller_identity" "current" {}
+
+
 variable "bucket_prefix" {
   type = string
   default = "test"
