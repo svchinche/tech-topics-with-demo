@@ -20,3 +20,49 @@ opa exec --decision terraform/s3/deny --bundle policy tfplan.json
   ]
 }
 ```
+
+## Configure Terraform Cloud + Module
+
+Add organization details in providers.tf file
+
+```sh
+terraform {
+  required_version = "=1.7.5"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+    }
+  }
+ cloud {
+   organization = "ccoms"
+   workspaces {
+     name = "my_workspace"
+   }
+ }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+```
+Setup Terraform Cloud.
+1. Create Organization, if not available
+2. Create Workspace, if not created.
+3. Configure env variables as show below
+4. Run terraform init on CLI 
+5. Run terraform plan
+6. Check output in CLI and in terraform Cloud
+
+### Configure env variables
+<p align="center"><img width="800" height="400" src=".images/tfc_env.png"></p>
+
+### Run terraform init on CLI
+```sh
+terraform init -upgrade
+```
+
+### Run terraform plan from CLI
+<p align="center"><img width="800" height="400" src=".images/tfcli_plan.png"></p>
+
+### Check output in CLI and in terraform Cloud
+<p align="center"><img width="800" height="400" src=".images/tfc_plan.png"></p>
