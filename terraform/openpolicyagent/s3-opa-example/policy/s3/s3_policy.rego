@@ -2,72 +2,44 @@ package terraform.s3
 
 import input.tfplan as tfplan
 
-allowed_acls = ["private"]
-#allowed_sse_algorithms = ["aws:kms", "AES256"]
-allowed_sse_algorithms = ["aws:kms"]
-
-s3_buckets[r] {
-    r := tfplan.resource_changes[_]
-    r.type == "aws_s3_bucket"
-}
-
-array_contains(arr, elem) {
-  arr[_] = elem
-}
-
-# Rule to restrict S3 bucket ACLs
 deny[reason] {
-    r := s3_buckets[_]
-    not array_contains(allowed_acls, r.change.after.acl)
-    reason := sprintf(
-        "%s: ACL %q is not allowed",
-        [r.address, r.change.after.acl]
-    )
+  r = input.resource_changes[_]
+  r.type == "aws_s3_bucket_server_side_encryption_configuration"
+  rule = r.change.after.rule[_]
+  apply_server = rule.apply_server_side_encryption_by_default[_]
+  apply_server.sse_algorithm != "aws:kms"
+  reason := sprintf("%-20s :: S3 bucket must be encrypted using KMS", [r.address])
 }
 
-# Rule to require server-side encryption
 deny[reason] {
-    r := s3_buckets[_]
-    count(r.change.after.server_side_encryption_configuration) == 0
-    reason := sprintf(
-        "%s: requires server-side encryption with expected sse_algorithm to be one of %v",
-        [r.address, allowed_sse_algorithms]
-    )
+  r = input.resource_changes[_]
+  r.type == "aws_s3_bucket"
+  not r.change.after.tags["Product"]
+  not r.change.after.tags["Name"]
+  reason := sprintf("%-20s :: S3 bucket should have Product and Name tags", [r.address])
 }
 
-# Rule to enforce specific SSE algorithms
 deny[reason] {
-    r := s3_buckets[_]
-    sse_configuration := r.change.after.server_side_encryption_configuration[_]
-    apply_sse_by_default := sse_configuration.rule[_].apply_server_side_encryption_by_default[_]
-    not array_contains(allowed_sse_algorithms, apply_sse_by_default.sse_algorithm)
-    reason := sprintf(
-        "%s: expected sse_algorithm to be one of %v",
-        [r.address, allowed_sse_algorithms]
-    )
+  r = input.resource_changes[_]
+  r.type == "aws_s3_bucket_public_access_block"
+  r.change.after.block_public_acls != "true"
+  r.change.after.block_public_policy != "true"
+  r.change.after.ignore_public_acls != "true"
+  r.change.after.restrict_public_buckets != "true"
+  reason := sprintf("%-20s :: S3 buckets all public should be blocked", [r.address])
 }
 
-deny[msg] {
-  some i
-  input.resource_changes[i].type == "aws_s3_bucket"
-  input.resource_changes[i].change.after.acl != "private"
-  msg = "S3 bucket ACL is not private"
+deny[reason] {
+  r = input.resource_changes[_]
+  r.type == "aws_s3_bucket_acl"
+  r.change.after.acl != "private"
+  reason := sprintf("%-20s :: S3 buckets must not be public", [r.address])
 }
 
-deny[msg] {
-  some i
-  input.resource_changes[i].type == "aws_s3_bucket"
-  not input.resource_changes[i].change.after.tags["Product"]
-  not input.resource_changes[i].change.after.tags["Name"]
-  msg = "S3 bucket should have 'Product' and 'Name' tags"
-}
-
-deny[msg] {
-  some i
-  input.resource_changes[i].type == "aws_s3_bucket"
-  not input.resource_changes[i].change.after.public_access_block.block_public_acls
-  not input.resource_changes[i].change.after.public_access_block.block_public_policy
-  not input.resource_changes[i].change.after.public_access_block.ignore_public_acls
-  not input.resource_changes[i].change.after.public_access_block.restrict_public_buckets
-  msg = "S3 bucket should block all public access"
+deny[reason] {
+  r = input.resource_changes[_]
+  r.type == "aws_s3_bucket_versioning"
+  conf = r.change.after.versioning_configuration[_]
+  conf.status != "Enabled"
+  reason := sprintf("%-20s :: S3 buckets versioning must be Enabled", [r.address])
 }
