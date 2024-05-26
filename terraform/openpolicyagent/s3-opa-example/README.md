@@ -45,6 +45,7 @@ provider "aws" {
   region = "us-east-1"
 }
 ```
+
 Setup Terraform Cloud.
 1. Create Organization, if not available
 2. Create Workspace, if not created.

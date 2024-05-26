@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "s3-bucket" {
   bucket = "my-s3-bucket"
-  acl = "public-read"
 #  tags = {
 #    Name    = "s3-bucket"
 #    Product = "s3-product"
@@ -12,16 +11,20 @@ resource "aws_s3_bucket" "s3-bucket" {
 #      }
 #    }
 #  }
-  versioning {
-    enabled = false
-  }
-  lifecycle_rule {
-    enabled = true
-    abort_incomplete_multipart_upload_days = 1
+}
+
+resource "aws_s3_bucket_acl" "s3_acl" {
+  bucket = aws_s3_bucket.s3-bucket.id
+  acl    = "private"
+}
+resource "aws_s3_bucket_versioning" "s3_version" {
+  bucket = aws_s3_bucket.s3-bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "s3_public" {
+resource "aws_s3_bucket_public_access_block" "s3_public_access_block" {
   bucket = aws_s3_bucket.s3-bucket.id
   block_public_acls       = true
   block_public_policy     = true
