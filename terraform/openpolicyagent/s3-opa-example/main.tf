@@ -1,16 +1,10 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_s3_bucket" "s3-bucket" {
-  bucket = "my-example-bucket"
+  bucket = "my-s3-bucket"
   acl = "private"
-
 #  tags = {
-#    Name    = "example-bucket"
-#    Product = "example-product"
+#    Name    = "s3-bucket"
+#    Product = "s3-product"
 #  }
-
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -18,16 +12,13 @@ resource "aws_s3_bucket" "s3-bucket" {
       }
     }
   }
-
   versioning {
     enabled = false
   }
-
   lifecycle_rule {
     enabled = true
     abort_incomplete_multipart_upload_days = 1
   }
-
   public_access_block {
     block_public_acls       = true
     block_public_policy     = true
