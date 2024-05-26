@@ -5,10 +5,14 @@ terraform {
       source  = "hashicorp/aws"
     }
   }
- # cloud {
- #   organization = "ccoms"
- #   workspaces {
- #     name = "my_workspace"
- #   }
- # }
+ cloud {
+   organization = "ccoms"
+   workspaces {
+     name = "my_workspace"
+   }
+ }
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
