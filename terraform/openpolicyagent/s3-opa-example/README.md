@@ -67,3 +67,18 @@ terraform init -upgrade
 
 ### Check output in CLI and in terraform Cloud
 <p align="center"><img width="800" height="400" src=".images/tfc_plan.png"></p>
+
+### Setting Up Policy on terraform Cloud
+1. Create policy set as below
+Description - Policy sets are collections of policies you can apply globally or to specific projects and workspaces in your organization
+<p align="center"><img width="800" height="400" src=".images/tfc_policy_set_1.png"></p>
+<p align="center"><img width="800" height="400" src=".images/tfc_policy_set_2.png"></p>
+
+2. Create policy as below
+Description - This is required to create a policy and attach it to policy set
+<p align="center"><img width="800" height="400" src=".images/tfc_policy_1.png"></p>
+<p align="center"><img width="800" height="400" src=".images/tfc_policy_2.png"></p>
+
+3. Run and verify the policies
+<p align="center"><img width="800" height="400" src=".images/tfc_run.png"></p>
+<p align="center"><img width="800" height="400" src=".images/tfc_run_with_policy.png"></p>
