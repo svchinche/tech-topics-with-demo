@@ -11,10 +11,12 @@ opa exec --decision terraform/policies/s3_security/deny --bundle policy tfplan.j
 {
   "result": [
     {
-      "path": "tfplan.json",
+      "path": "input_plan.json",
       "result": [
-        "S3 bucket should block all public access",
-        "S3 bucket should have 'Product' and 'Name' tags"
+        "aws_s3_bucket.s3_bucket :: S3 bucket should have Product and Name tags",
+        "aws_s3_bucket_public_access_block.s3_bucket_public_access_block :: S3 buckets all public should be blocked",
+        "aws_s3_bucket_server_side_encryption_configuration.s3_bucket_server_side_encryption_configuration :: S3 bucket must be encrypted using KMS",
+        "aws_s3_bucket_versioning.s3_version :: S3 buckets versioning must be Enabled"
       ]
     }
   ]
