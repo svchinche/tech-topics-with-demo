@@ -7,7 +7,7 @@ This project demonstrates the use of Terraform to manage AWS S3 resources, along
 ```sh
 terraform plan --out tfplan.binary && terraform show -json tfplan.binary > tfplan.json
 
-opa exec --decision terraform/s3/deny --bundle policy tfplan.json
+opa exec --decision terraform/policies/s3_security/deny --bundle policy tfplan.json
 {
   "result": [
     {
