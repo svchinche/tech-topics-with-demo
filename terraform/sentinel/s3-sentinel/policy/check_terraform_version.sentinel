@@ -1,0 +1,10 @@
+import "tfplan/v2" as tfplan
+import "strings"
+
+expected_version = "1.7.5"
+current_version = tfplan.terraform_version
+print("Current version is", current_version)
+main = rule {
+    #version_major is 14 and version_minor >= 1
+    current_version == expected_version
+}

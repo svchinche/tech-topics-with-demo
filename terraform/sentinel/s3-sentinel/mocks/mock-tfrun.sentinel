@@ -1,0 +1,56 @@
+id = "run-oB4nPCsz3ArXWTYf"
+created_at = "2024-05-26T11:19:16.444Z"
+created_by = "suyogchinche"
+message = "Triggered via CLI"
+commit_sha = undefined
+speculative = false
+is_destroy = false
+refresh = true
+refresh_only = false
+replace_addrs = null
+target_addrs = null
+project = {
+	"id":   "prj-t77j2EPu34VTTtoJ",
+	"name": "Default Project",
+}
+
+variables = {
+	"AWS_ACCESS_KEY_ID": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_ACCOUNT_ID": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_ROLE_ARN": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_SECRET_ACCESS_KEY": {
+		"category":  "env",
+		"sensitive": true,
+	},
+}
+
+organization = {
+	"name": "ccoms",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2024-05-12T05:58:15.587Z",
+	"description":       null,
+	"execution_mode":    "default",
+	"id":                "ws-LXCJ4FAGskub6XGU",
+	"name":              "my_workspace",
+	"tags":              [],
+	"vcs_repo":          null,
+	"working_directory": "",
+}
+
+cost_estimate = {
+	"delta_monthly_cost":    "0.0",
+	"prior_monthly_cost":    "0.0",
+	"proposed_monthly_cost": "0.0",
+}

@@ -1,0 +1,170 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data":    {},
+		"modules": {},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {
+					"": {
+						"config": {
+							"region": "us-east-1",
+						},
+						"references": {
+							"region": [],
+						},
+						"version": "",
+					},
+				},
+				"config": {
+					"region": "us-east-1",
+				},
+				"references": {
+					"region": [],
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_s3_bucket": {
+				"s3_bucket": {
+					"config": {
+						"bucket": "my-s3_bucket",
+						"tags": {
+							"business": "ccoms",
+							"company":  "ccoms",
+						},
+					},
+					"provisioners": null,
+					"references": {
+						"bucket": [],
+						"tags":   [],
+					},
+				},
+			},
+			"aws_s3_bucket_acl": {
+				"s3_acl": {
+					"config": {
+						"acl": "public-read",
+					},
+					"provisioners": null,
+					"references": {
+						"acl": [],
+						"bucket": [
+							"aws_s3_bucket.s3_bucket.id",
+							"aws_s3_bucket.s3_bucket",
+						],
+					},
+				},
+			},
+			"aws_s3_bucket_public_access_block": {
+				"s3_bucket_public_access_block": {
+					"config": {
+						"block_public_acls":       true,
+						"block_public_policy":     false,
+						"ignore_public_acls":      true,
+						"restrict_public_buckets": true,
+					},
+					"provisioners": null,
+					"references": {
+						"block_public_acls":   [],
+						"block_public_policy": [],
+						"bucket": [
+							"aws_s3_bucket.s3_bucket.id",
+							"aws_s3_bucket.s3_bucket",
+						],
+						"ignore_public_acls":      [],
+						"restrict_public_buckets": [],
+					},
+				},
+			},
+			"aws_s3_bucket_server_side_encryption_configuration": {
+				"s3_bucket_server_side_encryption_configuration": {
+					"config": {
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"sse_algorithm": "AES256",
+									},
+								],
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"bucket": [
+							"aws_s3_bucket.s3_bucket.id",
+							"aws_s3_bucket.s3_bucket",
+						],
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"sse_algorithm": [],
+									},
+								],
+							},
+						],
+					},
+				},
+			},
+			"aws_s3_bucket_versioning": {
+				"s3_version": {
+					"config": {
+						"versioning_configuration": [
+							{
+								"status": "Disabled",
+							},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"bucket": [
+							"aws_s3_bucket.s3_bucket.id",
+							"aws_s3_bucket.s3_bucket",
+						],
+						"versioning_configuration": [
+							{
+								"status": [],
+							},
+						],
+					},
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

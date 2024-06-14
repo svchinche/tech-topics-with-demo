@@ -1,0 +1,173 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"full_name":           "registry.terraform.io/hashicorp/aws",
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_s3_bucket.s3_bucket": {
+		"address": "aws_s3_bucket.s3_bucket",
+		"config": {
+			"bucket": {
+				"constant_value": "my-s3_bucket",
+			},
+			"tags": {
+				"constant_value": {
+					"business": "ccoms",
+					"company":  "ccoms",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "s3_bucket",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket",
+	},
+	"aws_s3_bucket_acl.s3_acl": {
+		"address": "aws_s3_bucket_acl.s3_acl",
+		"config": {
+			"acl": {
+				"constant_value": "public-read",
+			},
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.s3_bucket.id",
+					"aws_s3_bucket.s3_bucket",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "s3_acl",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_acl",
+	},
+	"aws_s3_bucket_public_access_block.s3_bucket_public_access_block": {
+		"address": "aws_s3_bucket_public_access_block.s3_bucket_public_access_block",
+		"config": {
+			"block_public_acls": {
+				"constant_value": true,
+			},
+			"block_public_policy": {
+				"constant_value": false,
+			},
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.s3_bucket.id",
+					"aws_s3_bucket.s3_bucket",
+				],
+			},
+			"ignore_public_acls": {
+				"constant_value": true,
+			},
+			"restrict_public_buckets": {
+				"constant_value": true,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "s3_bucket_public_access_block",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_public_access_block",
+	},
+	"aws_s3_bucket_server_side_encryption_configuration.s3_bucket_server_side_encryption_configuration": {
+		"address": "aws_s3_bucket_server_side_encryption_configuration.s3_bucket_server_side_encryption_configuration",
+		"config": {
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.s3_bucket.id",
+					"aws_s3_bucket.s3_bucket",
+				],
+			},
+			"rule": [
+				{
+					"apply_server_side_encryption_by_default": [
+						{
+							"sse_algorithm": {
+								"constant_value": "AES256",
+							},
+						},
+					],
+				},
+			],
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "s3_bucket_server_side_encryption_configuration",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_server_side_encryption_configuration",
+	},
+	"aws_s3_bucket_versioning.s3_version": {
+		"address": "aws_s3_bucket_versioning.s3_version",
+		"config": {
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.s3_bucket.id",
+					"aws_s3_bucket.s3_bucket",
+				],
+			},
+			"versioning_configuration": [
+				{
+					"status": {
+						"constant_value": "Disabled",
+					},
+				},
+			],
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "s3_version",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_versioning",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
